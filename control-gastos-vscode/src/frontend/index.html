@@ -1,0 +1,77 @@
+
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Control de Gastos - Demo</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Control de Gastos - Demo</h1>
+    <div id="auth-area">
+      <h2>Login</h2>
+      <input id="email" placeholder="Correo" />
+      <input id="password" type="password" placeholder="Contraseña" />
+      <button id="btn-login">Iniciar sesión</button>
+      <p>¿No tienes cuenta? <a href="#" id="link-register">Regístrate</a></p>
+    </div>
+
+    <div id="register-area" style="display:none;">
+      <h2>Registro</h2>
+      <input id="r-name" placeholder="Nombre" />
+      <input id="r-email" placeholder="Correo" />
+      <input id="r-password" type="password" placeholder="Contraseña" />
+      <select id="r-currency">
+        <option value="USD">USD</option>
+        <option value="EUR">EUR</option>
+        <option value="PEN">PEN</option>
+      </select>
+      <button id="btn-register">Registrar</button>
+      <p><a href="#" id="link-back-login">Volver a login</a></p>
+    </div>
+
+    <div id="dashboard" style="display:none;">
+      <h2>Bienvenido <span id="user-name"></span></h2>
+      <div id="salary-area">
+        <label>Sueldo mensual:</label>
+        <input id="salary-input" type="number" step="0.01" />
+        <button id="btn-save-salary">Guardar sueldo</button>
+      </div>
+
+      <h3>Registrar gasto</h3>
+      <input id="g-title" placeholder="Título" />
+      <input id="g-amount" type="number" step="0.01" placeholder="Monto" />
+      <input id="g-date" type="date" />
+      <button id="btn-add-expense">Agregar gasto</button>
+
+      <h3>Gastos recientes</h3>
+      <ul id="expenses-list"></ul>
+
+      <h3>Resumen</h3>
+      <p>Recomendación de ahorro (Automático): <span id="suggested-saving"></span></p>
+    <div id="history-area" style="display:none;">
+  <h2>Registro y Saldos Anteriores</h2>
+  <button id="btn-new-entry">Crear nuevo registro</button>
+  <table id="history-table">
+    <thead>
+      <tr>
+        <th>Fecha</th>
+        <th>Título</th>
+        <th>Monto</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- Aquí se llenarán los registros dinámicamente -->
+    </tbody>
+  </table>
+  <p><a href="#" id="link-back-dashboard">Volver al Dashboard</a></p>
+</div>
+
+    </div>
+  </div>
+  <script src="main.js"></script>
+</body>
+</html>
