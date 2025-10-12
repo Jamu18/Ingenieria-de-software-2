@@ -1,15 +1,20 @@
-
 <!doctype html>
 <html>
+
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Control de Gastos - Demo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lobster&display=swap" rel="stylesheet">
+  <link rel="preload" href="styles.css" as="style">
   <link rel="stylesheet" href="styles.css">
 </head>
+
 <body>
   <div class="container">
-    <h1>Control de Gastos - Demo</h1>
+    <h1 class="titulo"> Control de Gastos <span>Demo</span></h1>
     <div id="auth-area">
       <h2>Login</h2>
       <input id="email" placeholder="Correo" />
@@ -51,27 +56,28 @@
 
       <h3>Resumen</h3>
       <p>Recomendación de ahorro (Automático): <span id="suggested-saving"></span></p>
-    <div id="history-area" style="display:none;">
-  <h2>Registro y Saldos Anteriores</h2>
-  <button id="btn-new-entry">Crear nuevo registro</button>
-  <table id="history-table">
-    <thead>
-      <tr>
-        <th>Fecha</th>
-        <th>Título</th>
-        <th>Monto</th>
-        <th>Acciones</th>
-      </tr>
-    </thead>
-    <tbody>
-      <!-- Aquí se llenarán los registros dinámicamente -->
-    </tbody>
-  </table>
-  <p><a href="#" id="link-back-dashboard">Volver al Dashboard</a></p>
-</div>
+      <div id="history-area" style="display:none;">
+        <h2>Registro y Saldos Anteriores</h2>
+        <button id="btn-new-entry">Crear nuevo registro</button>
+        <table id="history-table">
+          <thead>
+            <tr>
+              <th>Fecha</th>
+              <th>Título</th>
+              <th>Monto</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Aquí se llenarán los registros dinámicamente -->
+          </tbody>
+        </table>
+        <p><a href="#" id="link-back-dashboard">Volver al Dashboard</a></p>
+      </div>
 
     </div>
   </div>
   <script src="main.js"></script>
 </body>
+
 </html>

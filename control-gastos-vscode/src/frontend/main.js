@@ -137,7 +137,7 @@ function updateSummary() {
   const available = salary - totalExpenses - savingGoal;
   const suggested = (salary * 0.2).toFixed(2);
 
-  document.getElementById("suggested-saving").textContent = 
+  document.getElementById("suggested-saving").textContent =
     `Meta manual: $${savingGoal.toFixed(2)} | Sugerido: $${suggested} | Disponible: $${available.toFixed(2)}`;
 }
 

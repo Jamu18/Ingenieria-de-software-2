@@ -1,5 +1,49 @@
+html {
 
-body{font-family: Arial, sans-serif;margin:20px;background:#f7f7f7}
-.container{max-width:800px;margin:0 auto;background:white;padding:20px;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,0.06)}
-input,select{display:block;margin:8px 0;padding:8px;width:100%;box-sizing:border-box}
-button{padding:8px 12px;margin:6px 0}
+    font-size: 62.5%;
+}
+
+body {
+
+    font-family: Arial, sans-serif;
+    margin: 20px;
+    background: #807f7f
+}
+
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06)
+}
+
+
+
+.titulo {
+    text-align: center;
+    color: #333;
+    font-size: 3rem;
+    font-family: "Lobster", sans-serif;
+    font-weight: 400;
+    font-style: normal
+    }
+.titulo span {
+        font-size: 2rem;
+        color: #007BFF
+    }
+
+input,
+    select {
+        display: block;
+        margin: 8px 0;
+        padding: 8px;
+        width: 99%;
+
+        box-sizing: border-box
+    } 
+button {
+            padding: 8px 12px;
+            margin: 6px 0;
+        }
