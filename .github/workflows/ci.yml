@@ -21,6 +21,7 @@ jobs:
 
       - name: Instalar dependencias
         run: npm install
+        working-directory: control-gastos-vscode
 
       # - name: Ejecutar pruebas
       #   run: npm test
