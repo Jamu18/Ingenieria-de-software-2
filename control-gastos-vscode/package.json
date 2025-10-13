@@ -5,7 +5,7 @@
   "scripts": {
     "start": "node src/backend/app.js",
     "start:backend": "node src/backend/app.js",
-    "test": "echo \"Sin pruebas definidas\" && exit 0"
+  "test": "echo Sin pruebas definidas"
   },
   "dependencies": {
     "express": "^4.18.2",
