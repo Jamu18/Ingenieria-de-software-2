@@ -1,0 +1,45 @@
+name: CI/CD Pipeline
+
+# Definir los eventos que activan el flujo de trabajo
+on:
+  push:
+    branches:
+      - main  # Despliega cada vez que se haga un push a la rama 'main'
+  pull_request:
+    branches:
+      - main  # También se activa con pull requests hacia 'main'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest  # Esto ejecuta el trabajo en un contenedor de Ubuntu
+
+    steps:
+      - name: Check out the code
+        uses: actions/checkout@v2  # Hace un checkout del código del repositorio
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2  # Configura Node.js en el entorno
+        with:
+          node-version: '14'  # Puedes ajustar la versión de Node.js si es necesario
+
+      - name: Install dependencies
+        run: npm install  # Instala las dependencias del proyecto
+
+      - name: Run tests
+        run: npm test  # Ejecuta las pruebas unitarias (puedes personalizar esto)
+
+  deploy:
+    runs-on: ubuntu-latest  # Ejecución en Ubuntu
+    needs: build  # Este trabajo depende de que el trabajo de 'build' se ejecute primero
+
+    steps:
+      - name: Check out the code
+        uses: actions/checkout@v2
+
+      - name: Deploy to AWS S3 (example)
+        run: |
+          aws s3 sync ./dist s3://my-bucket-name/  # Sincroniza los archivos a S3
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}  # Clave de acceso a AWS
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}  # Clave secreta de AWS
+          AWS_DEFAULT_REGION: 'us-east-1'  # Región de AWS
