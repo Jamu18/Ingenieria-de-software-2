@@ -39,23 +39,63 @@
 
     <div id="dashboard" style="display:none;">
       <h2>Bienvenido <span id="user-name"></span></h2>
-      <div id="salary-area">
-        <label>Sueldo mensual:</label>
-        <input id="salary-input" type="number" step="0.01" />
-        <button id="btn-save-salary">Guardar sueldo</button>
+      <div id="salary-area" class="card-section">
+        <h3>Configuración de Sueldo</h3>
+        <div class="salary-input-area">
+          <label>Sueldo mensual:</label>
+          <input id="salary-input" type="number" step="0.01" />
+        </div>
+        
+        <div class="percentage-distribution">
+          <h4>Distribución de Sueldo</h4>
+          <div class="percentage-input">
+            <label>Necesidades básicas (%):</label>
+            <input id="basic-needs-percent" type="number" value="50" min="0" max="100" />
+          </div>
+          <div class="percentage-input">
+            <label>Gastos personales (%):</label>
+            <input id="personal-percent" type="number" value="30" min="0" max="100" />
+          </div>
+          <div class="percentage-input">
+            <label>Ahorro (%):</label>
+            <input id="savings-percent" type="number" value="20" min="0" max="100" />
+          </div>
+        </div>
+        <button id="btn-save-salary" class="btn-primary">Guardar configuración</button>
       </div>
 
-      <h3>Registrar gasto</h3>
-      <input id="g-title" placeholder="Título" />
-      <input id="g-amount" type="number" step="0.01" placeholder="Monto" />
-      <input id="g-date" type="date" />
-      <button id="btn-add-expense">Agregar gasto</button>
+      <div class="distribution-summary card-section">
+        <h3>Tu Dinero Este Mes</h3>
+        <div class="money-distribution">
+          <div class="money-box basic-needs">
+            <h4>Necesidades Básicas</h4>
+            <div class="amount" id="basic-needs-amount">$0</div>
+            <div class="percent">50%</div>
+          </div>
+          <div class="money-box personal-expenses">
+            <h4>Gastos Personales</h4>
+            <div class="amount" id="personal-amount">$0</div>
+            <div class="percent">30%</div>
+          </div>
+          <div class="money-box savings">
+            <h4>Ahorro</h4>
+            <div class="amount" id="savings-amount">$0</div>
+            <div class="percent" id="savings-percent">20%</div>
+          </div>
+        </div>
+      </div>
 
-      <h3>Gastos recientes</h3>
-      <ul id="expenses-list"></ul>
+      <div class="navigation-buttons">
+        <a href="expenses.html" class="nav-button">
+          <span class="icon">📝</span>
+          Registrar Gastos
+        </a>
+        <a href="savings-goals.html" class="nav-button">
+          <span class="icon">🎯</span>
+          Metas de Ahorro
+        </a>
+      </div>
 
-      <h3>Resumen</h3>
-      <p>Recomendación de ahorro (Automático): <span id="suggested-saving"></span></p>
       <div id="history-area" style="display:none;">
         <h2>Registro y Saldos Anteriores</h2>
         <button id="btn-new-entry">Crear nuevo registro</button>

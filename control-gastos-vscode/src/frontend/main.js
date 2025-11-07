@@ -15,6 +15,7 @@ document.getElementById("btn-login").addEventListener("click", () => {
 
   if (user) {
     currentUser = user;
+    saveSession(user); // Guardar sesión
     document.getElementById("auth-area").style.display = "none";
     document.getElementById("register-area").style.display = "none";
     document.getElementById("dashboard").style.display = "block";
@@ -53,12 +54,83 @@ document.getElementById("btn-register").addEventListener("click", () => {
   document.getElementById("auth-area").style.display = "block";
 });
 
-// ==== SUELDO ====
-document.getElementById("btn-save-salary").addEventListener("click", () => {
+// ==== SUELDO Y DISTRIBUCIÓN ====
+let distributionConfig = JSON.parse(localStorage.getItem("distributionConfig")) || {
+  basicNeeds: 50,
+  personal: 30,
+  savings: 20
+};
+
+// Función para actualizar los porcentajes
+function updatePercentages() {
+  const basicNeeds = parseFloat(document.getElementById("basic-needs-percent").value);
+  const personal = parseFloat(document.getElementById("personal-percent").value);
+  const savings = parseFloat(document.getElementById("savings-percent").value);
+
+  // Validar que los porcentajes sumen 100
+  const total = basicNeeds + personal + savings;
+  if (total !== 100) {
+    alert("Los porcentajes deben sumar 100%");
+    return false;
+  }
+
+  distributionConfig = { basicNeeds, personal, savings };
+  localStorage.setItem("distributionConfig", JSON.stringify(distributionConfig));
+  return true;
+}
+
+// Función para formatear montos en formato de moneda
+function formatCurrency(amount) {
+  return new Intl.NumberFormat('es-PE', {
+    style: 'currency',
+    currency: 'PEN',
+    minimumFractionDigits: 2
+  }).format(amount);
+}
+
+// Función para calcular y mostrar la distribución del sueldo
+function updateDistribution() {
+  const basicNeedsAmount = (salary * distributionConfig.basicNeeds / 100);
+  const personalAmount = (salary * distributionConfig.personal / 100);
+  const savingsAmount = (salary * distributionConfig.savings / 100);
+
+  document.getElementById("basic-needs-amount").textContent = formatCurrency(basicNeedsAmount);
+  document.getElementById("personal-amount").textContent = formatCurrency(personalAmount);
+  document.getElementById("savings-amount").textContent = formatCurrency(savingsAmount);
+
+  // Actualizar los porcentajes mostrados
+  document.querySelector(".basic-needs .percent").textContent = `${distributionConfig.basicNeeds}%`;
+  document.querySelector(".personal-expenses .percent").textContent = `${distributionConfig.personal}%`;
+  document.querySelector(".savings .percent").textContent = `${distributionConfig.savings}%`;
+}
+
+// Evento para guardar sueldo y configuración
+// Actualizar valores cuando se cambia el sueldo
+document.getElementById("salary-input").addEventListener("input", () => {
   salary = parseFloat(document.getElementById("salary-input").value) || 0;
   localStorage.setItem("salary", salary);
+  updateDistribution();
   updateSummary();
 });
+
+// Guardar configuración de porcentajes
+document.getElementById("btn-save-salary").addEventListener("click", () => {
+  if (updatePercentages()) {
+    updateDistribution();
+    updateSummary();
+  }
+});
+
+// Cargar valores guardados al iniciar
+document.getElementById("basic-needs-percent").value = distributionConfig.basicNeeds;
+document.getElementById("personal-percent").value = distributionConfig.personal;
+document.getElementById("savings-percent").value = distributionConfig.savings;
+
+// Actualizar la distribución cuando se carga la página
+if (salary > 0) {
+  document.getElementById("salary-input").value = salary;
+  updateDistribution();
+}
 
 // ==== GASTOS ====
 document.getElementById("btn-add-expense").addEventListener("click", () => {
@@ -134,11 +206,14 @@ function setSavingGoal() {
 // ==== RESUMEN ====
 function updateSummary() {
   const totalExpenses = expenses.reduce((sum, exp) => sum + exp.amount, 0);
-  const available = salary - totalExpenses - savingGoal;
-  const suggested = (salary * 0.2).toFixed(2);
-
-  document.getElementById("suggested-saving").textContent =
-    `Meta manual: $${savingGoal.toFixed(2)} | Sugerido: $${suggested} | Disponible: $${available.toFixed(2)}`;
+  const savings = (salary * distributionConfig.savings / 100);
+  
+  // Mostrar solo el ahorro calculado del porcentaje
+  document.getElementById("savings-amount").textContent = formatCurrency(savings);
+  document.getElementById("savings-percent").textContent = `${distributionConfig.savings}%`;
+  
+  // Actualizar los montos en la distribución
+  updateDistribution();
 }
 
 // ==== HISTORIAL (Extra) ====
