@@ -17,9 +17,10 @@
 
 <body>
     <main class="page">
+        <!-- Blob general (oculto en login) -->
         <div class="blob" aria-hidden="true"></div>
 
-        <!-- ================== LOGIN / REGISTRO ================== -->
+        <!-- ============== LOGIN / REGISTRO ============== -->
         <section class="card" id="auth-card">
             <header class="brand">
                 <h1 class="brand__title" style="font-family:'Lobster', cursive;">
@@ -87,14 +88,11 @@
 
         <!-- ================== APP ================== -->
         <section id="app-shell" style="display:none; width:min(1120px,95vw);">
-
-            <!-- Topbar -->
             <header class="topbar">
                 <h1 class="brand__title sm" style="font-family:'Lobster', cursive;">
                     Control de Gastos <span>Demo</span>
                 </h1>
 
-                <!-- Nav -->
                 <nav class="tabs">
                     <button class="tab is-active" data-view="view-overview">Inicio</button>
                     <button class="tab" data-view="view-new">Nuevo gasto</button>
@@ -102,9 +100,8 @@
                     <button class="tab" data-view="view-summary">Resumen</button>
                 </nav>
 
-                <!-- Account -->
                 <div class="account">
-                    <img id="client-logo" class="avatar" src="https://i.imgur.com/8Km9tLL.png" alt="logo cliente">
+                    <img id="client-logo" class="avatar" src="./img/logo-cliente.png" alt="logo cliente">
                     <div class="menu" id="account-menu">
                         <div class="menu-header">
                             <div class="menu-name" id="menu-username">Usuario</div>
@@ -116,16 +113,13 @@
                 </div>
             </header>
 
-            <!-- Contenedor de vistas -->
             <section class="card-wide" id="router">
-
-                <!-- ========== VIEW: OVERVIEW (SOLO KPIs + DONUT) ========== -->
+                <!-- OVERVIEW -->
                 <section id="view-overview" class="view is-visible">
                     <header class="dash-header">
                         <h2>Bienvenido <span id="user-name"></span></h2>
                     </header>
 
-                    <!-- KPIs -->
                     <div class="kpis">
                         <div class="kpi">
                             <div class="kpi__label">Sueldo</div>
@@ -145,7 +139,6 @@
                         </div>
                     </div>
 
-                    <!-- Donut -->
                     <div class="dash-card donut-card">
                         <div class="donut-wrap">
                             <svg class="donut" viewBox="0 0 120 120">
@@ -163,7 +156,7 @@
                     </div>
                 </section>
 
-                <!-- ========== VIEW: NUEVO GASTO ========== -->
+                <!-- NUEVO GASTO -->
                 <section id="view-new" class="view">
                     <div class="dash-card">
                         <h3>Actualizar sueldo</h3>
@@ -189,7 +182,7 @@
                     </div>
                 </section>
 
-                <!-- ========== VIEW: HISTORIAL ========== -->
+                <!-- HISTORIAL -->
                 <section id="view-history" class="view">
                     <div id="history-area" class="dash-card">
                         <h2>Registro y Saldos Anteriores</h2>
@@ -212,17 +205,15 @@
                     </div>
                 </section>
 
-                <!-- ========== VIEW: RESUMEN ========== -->
+                <!-- RESUMEN -->
                 <section id="view-summary" class="view">
                     <div class="dash-card">
                         <h3>Resumen</h3>
                         <p>Recomendación de ahorro (Automático): <span id="suggested-saving"></span></p>
                     </div>
                 </section>
-
             </section>
 
-            <!-- Toasts -->
             <div id="toast" class="toast" aria-live="polite" aria-atomic="true"></div>
         </section>
     </main>
@@ -236,18 +227,11 @@
                 <button class="modal__close" data-close>&times;</button>
             </div>
             <div class="modal__body">
-                <label class="field">
-                    <span>Correo</span>
-                    <input id="acc-email" class="input" disabled>
-                </label>
-                <label class="field">
-                    <span>Nombre</span>
-                    <input id="acc-name" class="input" placeholder="Tu nombre">
-                </label>
-                <label class="field">
-                    <span>Nueva contraseña</span>
-                    <input id="acc-pass" type="password" class="input" placeholder="••••••••">
-                </label>
+                <label class="field"><span>Correo</span><input id="acc-email" class="input" disabled></label>
+                <label class="field"><span>Nombre</span><input id="acc-name" class="input"
+                        placeholder="Tu nombre"></label>
+                <label class="field"><span>Nueva contraseña</span><input id="acc-pass" type="password" class="input"
+                        placeholder="••••••••"></label>
                 <label class="field">
                     <span>Moneda</span>
                     <select id="acc-currency" class="input">
@@ -255,6 +239,22 @@
                         <option value="EUR">EUR</option>
                         <option value="PEN">PEN</option>
                     </select>
+                </label>
+
+                <!-- Logo del cliente -->
+                <label class="field">
+                    <span>Logo del cliente</span>
+                    <div class="logo-row">
+                        <img id="acc-logo-preview" class="logo-preview" src="./img/logo-cliente.png" alt="preview logo">
+                        <div class="logo-actions">
+                            <input id="acc-logo" type="file" accept="image/*" class="input-file">
+                            <small class="muted">Formatos: PNG/JPG/WebP · Máx. 512 KB</small>
+                            <div class="logo-buttons">
+                                <button type="button" class="btn btn--primary" id="btn-upload-logo">Subir logo</button>
+                                <button type="button" class="btn btn--ghost" id="btn-remove-logo">Quitar logo</button>
+                            </div>
+                        </div>
+                    </div>
                 </label>
             </div>
             <div class="modal__footer">

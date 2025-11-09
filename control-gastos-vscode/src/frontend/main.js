@@ -5,56 +5,48 @@ let salary = parseFloat(localStorage.getItem("salary")) || 0;
 let savingGoal = parseFloat(localStorage.getItem("savingGoal")) || 0;
 
 const $ = (id) => document.getElementById(id);
-const qs = (sel) => document.querySelector(sel);
-const qsa = (sel) => Array.from(document.querySelectorAll(sel));
+const qs = (s) => document.querySelector(s);
+const qsa = (s) => Array.from(document.querySelectorAll(s));
 const fmt = (n) => `$${(n || 0).toFixed(2)}`;
 
-// ---------- TOAST ----------
+// Toast
 function showToast(msg, type = "success") {
   const cont = $("toast"); if (!cont) return;
-  const node = document.createElement("div");
-  node.className = `toast__item ${type}`;
-  node.textContent = msg;
-  cont.appendChild(node);
-  setTimeout(() => node.remove(), 2800);
+  const n = document.createElement("div");
+  n.className = `toast__item ${type}`; n.textContent = msg;
+  cont.appendChild(n); setTimeout(() => n.remove(), 2800);
 }
 
-// ---------- ROUTER ----------
+// Router / Tabs
 function showView(id) {
   qsa(".view").forEach(v => v.classList.remove("is-visible"));
   $(id).classList.add("is-visible");
   qsa(".tab").forEach(t => t.classList.toggle("is-active", t.dataset.view === id));
 }
-function initTabs() {
-  qsa(".tab").forEach(btn => btn.addEventListener("click", () => showView(btn.dataset.view)));
+function initTabs() { qsa(".tab").forEach(b => b.addEventListener("click", () => showView(b.dataset.view))); }
+
+// Donut
+const CIRC = 2 * Math.PI * 52;
+function updateDonut(p) {
+  const seg = $("donut-segment"), lbl = $("donut-label");
+  const x = Math.max(0, Math.min(100, p || 0));
+  if (seg) seg.style.strokeDashoffset = String(CIRC * (1 - x / 100));
+  if (lbl) lbl.textContent = x.toFixed(0) + "%";
 }
 
-// ---------- DONUT ----------
-const CIRC = 2 * Math.PI * 52; // r=52 -> perímetro ≈ 327
-function updateDonut(pct) {
-  const seg = $("donut-segment");
-  const lbl = $("donut-label");
-  const clamped = Math.max(0, Math.min(100, pct));
-  if (seg) seg.style.strokeDashoffset = String(CIRC * (1 - clamped / 100));
-  if (lbl) lbl.textContent = clamped.toFixed(0) + "%";
-}
-
-// ---------- KPIs / STATS ----------
+// KPIs
 function renderStats() {
   const spent = expenses.reduce((s, e) => s + e.amount, 0);
   const available = salary - spent - (savingGoal || 0);
   const suggested = salary * 0.2;
-
   const set = (id, v) => { const el = $(id); if (el) el.textContent = v; };
   set("kpi-salary", fmt(salary));
   set("kpi-spent", fmt(spent));
   set("kpi-available", fmt(available));
   set("kpi-suggested", fmt(suggested));
-
   const pct = salary > 0 ? Math.min(100, Math.max(0, (spent / salary) * 100)) : 0;
   updateDonut(pct);
 }
-
 function updateSummary() {
   const spent = expenses.reduce((s, e) => s + e.amount, 0);
   const available = salary - spent - (savingGoal || 0);
@@ -64,10 +56,9 @@ function updateSummary() {
   renderStats();
 }
 
-// ---------- EXPENSES RENDER ----------
+// Expenses
 function renderExpenses() {
-  const list = $("expenses-list"); if (!list) return;
-  list.innerHTML = "";
+  const list = $("expenses-list"); if (!list) return; list.innerHTML = "";
   expenses.forEach((exp, i) => {
     const li = document.createElement("li");
     const left = document.createElement("div"); left.textContent = `${exp.date} · ${exp.title}`;
@@ -82,8 +73,6 @@ function renderExpenses() {
     list.appendChild(li);
   });
 }
-
-// ---------- CRUD helpers ----------
 function editExpense(i) {
   const e = expenses[i];
   $("g-title").value = e.title; $("g-amount").value = e.amount; $("g-date").value = e.date;
@@ -95,15 +84,17 @@ function deleteExpense(i) {
   renderExpenses(); updateSummary();
 }
 
-// ---------- AUTH / FLOW ----------
+// Auth / Flow
 function showLogin() {
   $("auth-card").style.display = "block";
   $("app-shell").style.display = "none";
+  document.body.classList.add("is-auth"); // activa imagen de fondo limpia
 }
 function showApp() {
   $("auth-card").style.display = "none";
   $("app-shell").style.display = "block";
-  showView("view-overview");           // Al entrar, solo KPIs + donut
+  showView("view-overview");
+  document.body.classList.remove("is-auth"); // quita imagen de fondo
 }
 
 function bindAuth() {
@@ -121,7 +112,7 @@ function bindAuth() {
     $("acc-email").value = currentUser.email || email;
     $("acc-name").value = currentUser.name || "";
     $("acc-currency").value = currentUser.currency || "USD";
-    renderExpenses(); updateSummary();
+    renderExpenses(); updateSummary(); loadSavedLogo();
   };
 
   $("btn-register").onclick = () => {
@@ -136,19 +127,39 @@ function bindAuth() {
   };
 }
 
-// ---------- ACCOUNT MENU & MODAL ----------
-function bindAccount() {
-  // Abrir menú al pasar el mouse (CSS) y modal al click
-  $("client-logo").onclick = () => { $("account-menu").style.display = $("account-menu").style.display === "block" ? "none" : "block" };
-  document.addEventListener("click", (e) => {
-    const acc = qs(".account"); if (!acc) return;
-    if (!acc.contains(e.target)) $("account-menu").style.display = "none";
-  });
+// Account + logo
+const DEFAULT_LOGO = "./img/logo-cliente.png";
+const LOGO_KEY = "clientLogo";
 
-  $("btn-open-account").onclick = () => {
-    $("account-modal").classList.add("is-open");
-    $("acc-pass").value = "";
+function loadSavedLogo() {
+  const saved = localStorage.getItem(LOGO_KEY);
+  const top = $("client-logo"); const pv = $("acc-logo-preview");
+  if (saved) { if (top) top.src = saved; if (pv) pv.src = saved; }
+  else { if (top) top.src = DEFAULT_LOGO; if (pv) pv.src = DEFAULT_LOGO; }
+}
+function handleLogoFile(file) {
+  if (!file) return;
+  const MAX = 512 * 1024; if (file.size > MAX) { alert("Máximo 512 KB"); return; }
+  const r = new FileReader();
+  r.onload = () => {
+    const data = r.result; localStorage.setItem(LOGO_KEY, data);
+    const top = $("client-logo"), pv = $("acc-logo-preview");
+    if (top) top.src = data; if (pv) pv.src = data; showToast("Logo actualizado");
   };
+  r.readAsDataURL(file);
+}
+function removeLogo() {
+  localStorage.removeItem(LOGO_KEY);
+  const top = $("client-logo"), pv = $("acc-logo-preview"), inp = $("acc-logo");
+  if (top) top.src = DEFAULT_LOGO; if (pv) pv.src = DEFAULT_LOGO; if (inp) inp.value = "";
+  showToast("Logo restaurado");
+}
+
+function bindAccount() {
+  $("client-logo").onclick = () => { $("account-menu").style.display = $("account-menu").style.display === "block" ? "none" : "block"; };
+  document.addEventListener("click", (e) => { const acc = qs(".account"); if (!acc) return; if (!acc.contains(e.target)) $("account-menu").style.display = "none"; });
+
+  $("btn-open-account").onclick = () => { $("account-modal").classList.add("is-open"); $("acc-pass").value = ""; loadSavedLogo(); };
   qsa("[data-close]").forEach(b => b.onclick = () => $("account-modal").classList.remove("is-open"));
 
   $("btn-save-account").onclick = () => {
@@ -156,8 +167,6 @@ function bindAccount() {
     const name = $("acc-name").value.trim();
     const pass = $("acc-pass").value.trim();
     const currency = $("acc-currency").value;
-
-    // actualizar en users[]
     const idx = users.findIndex(u => u.email === currentUser.email);
     if (idx >= 0) {
       users[idx].name = name || users[idx].name;
@@ -166,56 +175,42 @@ function bindAccount() {
       localStorage.setItem("users", JSON.stringify(users));
       currentUser = users[idx];
     }
-
-    // reflejar en UI
     $("user-name").textContent = currentUser.name || currentUser.email.split("@")[0];
     qs(".menu-name").textContent = currentUser.name || "Usuario";
     qs(".menu-email").textContent = currentUser.email;
-
     $("account-modal").classList.remove("is-open");
     showToast("Cuenta actualizada");
   };
 
-  // Cerrar sesión
-  $("btn-logout").onclick = () => {
-    currentUser = null;
-    showLogin();
-    showToast("Sesión cerrada", "error");
-  };
+  const accLogoInput = $("acc-logo"), accLogoBtn = $("btn-upload-logo");
+  if (accLogoBtn && accLogoInput) { accLogoBtn.onclick = () => accLogoInput.click(); accLogoInput.onchange = (e) => handleLogoFile(e.target.files[0]); }
+  const removeBtn = $("btn-remove-logo"); if (removeBtn) removeBtn.onclick = removeLogo;
+
+  $("btn-logout").onclick = () => { currentUser = null; showLogin(); showToast("Sesión cerrada", "error"); };
 }
 
-// ---------- NEW / SAVE EVENTS ----------
+// Data actions
 function bindDataActions() {
-  const goNew = qs('#btn-go-new');
-  if (goNew) goNew.onclick = () => { showView("view-new"); $("g-title").focus(); };
+  const goNew = qs('#btn-go-new'); if (goNew) goNew.onclick = () => { showView("view-new"); $("g-title").focus(); };
 
-  $("btn-save-salary").onclick = () => {
-    salary = parseFloat($("salary-input").value) || 0;
-    localStorage.setItem("salary", salary);
-    updateSummary(); showToast("Sueldo guardado");
-  };
+  $("btn-save-salary").onclick = () => { salary = parseFloat($("salary-input").value) || 0; localStorage.setItem("salary", salary); updateSummary(); showToast("Sueldo guardado"); };
 
   $("btn-add-expense").onclick = () => {
-    const title = $("g-title").value.trim();
-    const amount = parseFloat($("g-amount").value);
-    const date = $("g-date").value;
+    const title = $("g-title").value.trim(), amount = parseFloat($("g-amount").value), date = $("g-date").value;
     if (!title || !amount || !date) return alert("Completa todos los campos del gasto");
-
-    expenses.push({ title, amount, date });
-    localStorage.setItem("expenses", JSON.stringify(expenses));
+    expenses.push({ title, amount, date }); localStorage.setItem("expenses", JSON.stringify(expenses));
     $("g-title").value = ""; $("g-amount").value = ""; $("g-date").value = "";
     renderExpenses(); updateSummary(); showToast("Gasto agregado");
   };
 
-  // Tabla en Historial
   $("btn-new-entry").onclick = () => {
     showView("view-history");
     const tbody = qs("#history-table tbody"); tbody.innerHTML = "";
     expenses.forEach((e, i) => {
       const tr = document.createElement("tr");
       tr.innerHTML = `<td>${e.date}</td><td>${e.title}</td><td>${fmt(e.amount)}</td>
-                      <td><button data-edit="${i}">Editar</button>
-                          <button data-del="${i}">Borrar</button></td>`;
+                    <td><button data-edit="${i}">Editar</button>
+                        <button data-del="${i}">Borrar</button></td>`;
       tbody.appendChild(tr);
     });
     qs("#history-table").onclick = (ev) => {
@@ -227,11 +222,8 @@ function bindDataActions() {
   };
 }
 
-// ---------- INIT ----------
+// Init
 (function init() {
-  bindAuth();
-  bindAccount();
-  bindDataActions();
-  initTabs();
-  showLogin();         // arranca en login
+  bindAuth(); bindAccount(); bindDataActions(); initTabs(); loadSavedLogo();
+  showLogin(); // muestra login + imagen limpia de fondo
 })();
