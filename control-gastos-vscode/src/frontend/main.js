@@ -1,168 +1,237 @@
-// main.js
-
-// Datos en memoria (pueden guardarse en localStorage o backend PHP/MySQL si quieres luego)
 let currentUser = null;
 let users = JSON.parse(localStorage.getItem("users")) || [];
 let expenses = JSON.parse(localStorage.getItem("expenses")) || [];
 let salary = parseFloat(localStorage.getItem("salary")) || 0;
 let savingGoal = parseFloat(localStorage.getItem("savingGoal")) || 0;
 
-// ==== LOGIN & REGISTRO ====
-document.getElementById("btn-login").addEventListener("click", () => {
-  const email = document.getElementById("email").value;
-  const password = document.getElementById("password").value;
-  const user = users.find(u => u.email === email && u.password === password);
+const $ = (id) => document.getElementById(id);
+const qs = (sel) => document.querySelector(sel);
+const qsa = (sel) => Array.from(document.querySelectorAll(sel));
+const fmt = (n) => `$${(n || 0).toFixed(2)}`;
 
-  if (user) {
-    currentUser = user;
-    document.getElementById("auth-area").style.display = "none";
-    document.getElementById("register-area").style.display = "none";
-    document.getElementById("dashboard").style.display = "block";
-    document.getElementById("user-name").textContent = currentUser.name;
-    renderExpenses();
-    updateSummary();
-  } else {
-    alert("Credenciales incorrectas");
-  }
-});
+// ---------- TOAST ----------
+function showToast(msg, type = "success") {
+  const cont = $("toast"); if (!cont) return;
+  const node = document.createElement("div");
+  node.className = `toast__item ${type}`;
+  node.textContent = msg;
+  cont.appendChild(node);
+  setTimeout(() => node.remove(), 2800);
+}
 
-document.getElementById("link-register").addEventListener("click", () => {
-  document.getElementById("auth-area").style.display = "none";
-  document.getElementById("register-area").style.display = "block";
-});
+// ---------- ROUTER ----------
+function showView(id) {
+  qsa(".view").forEach(v => v.classList.remove("is-visible"));
+  $(id).classList.add("is-visible");
+  qsa(".tab").forEach(t => t.classList.toggle("is-active", t.dataset.view === id));
+}
+function initTabs() {
+  qsa(".tab").forEach(btn => btn.addEventListener("click", () => showView(btn.dataset.view)));
+}
 
-document.getElementById("link-back-login").addEventListener("click", () => {
-  document.getElementById("register-area").style.display = "none";
-  document.getElementById("auth-area").style.display = "block";
-});
+// ---------- DONUT ----------
+const CIRC = 2 * Math.PI * 52; // r=52 -> perímetro ≈ 327
+function updateDonut(pct) {
+  const seg = $("donut-segment");
+  const lbl = $("donut-label");
+  const clamped = Math.max(0, Math.min(100, pct));
+  if (seg) seg.style.strokeDashoffset = String(CIRC * (1 - clamped / 100));
+  if (lbl) lbl.textContent = clamped.toFixed(0) + "%";
+}
 
-document.getElementById("btn-register").addEventListener("click", () => {
-  const name = document.getElementById("r-name").value;
-  const email = document.getElementById("r-email").value;
-  const password = document.getElementById("r-password").value;
+// ---------- KPIs / STATS ----------
+function renderStats() {
+  const spent = expenses.reduce((s, e) => s + e.amount, 0);
+  const available = salary - spent - (savingGoal || 0);
+  const suggested = salary * 0.2;
 
-  if (!name || !email || !password) {
-    alert("Completa todos los campos");
-    return;
-  }
+  const set = (id, v) => { const el = $(id); if (el) el.textContent = v; };
+  set("kpi-salary", fmt(salary));
+  set("kpi-spent", fmt(spent));
+  set("kpi-available", fmt(available));
+  set("kpi-suggested", fmt(suggested));
 
-  users.push({ name, email, password });
-  localStorage.setItem("users", JSON.stringify(users));
-  alert("Usuario registrado. Ahora inicia sesión.");
-  document.getElementById("register-area").style.display = "none";
-  document.getElementById("auth-area").style.display = "block";
-});
+  const pct = salary > 0 ? Math.min(100, Math.max(0, (spent / salary) * 100)) : 0;
+  updateDonut(pct);
+}
 
-// ==== SUELDO ====
-document.getElementById("btn-save-salary").addEventListener("click", () => {
-  salary = parseFloat(document.getElementById("salary-input").value) || 0;
-  localStorage.setItem("salary", salary);
-  updateSummary();
-});
+function updateSummary() {
+  const spent = expenses.reduce((s, e) => s + e.amount, 0);
+  const available = salary - spent - (savingGoal || 0);
+  const suggested = (salary * 0.2).toFixed(2);
+  const el = $("suggested-saving");
+  if (el) el.textContent = `Meta manual: $${(savingGoal || 0).toFixed(2)} | Sugerido: $${suggested} | Disponible: $${(available || 0).toFixed(2)}`;
+  renderStats();
+}
 
-// ==== GASTOS ====
-document.getElementById("btn-add-expense").addEventListener("click", () => {
-  const title = document.getElementById("g-title").value;
-  const amount = parseFloat(document.getElementById("g-amount").value);
-  const date = document.getElementById("g-date").value;
-
-  if (!title || !amount || !date) {
-    alert("Completa todos los campos del gasto");
-    return;
-  }
-
-  expenses.push({ title, amount, date });
-  localStorage.setItem("expenses", JSON.stringify(expenses));
-  renderExpenses();
-  updateSummary();
-
-  // limpiar inputs
-  document.getElementById("g-title").value = "";
-  document.getElementById("g-amount").value = "";
-  document.getElementById("g-date").value = "";
-});
-
+// ---------- EXPENSES RENDER ----------
 function renderExpenses() {
-  const list = document.getElementById("expenses-list");
+  const list = $("expenses-list"); if (!list) return;
   list.innerHTML = "";
-
-  expenses.forEach((exp, index) => {
+  expenses.forEach((exp, i) => {
     const li = document.createElement("li");
-    li.textContent = `${exp.date} - ${exp.title}: $${exp.amount.toFixed(2)} `;
-
-    // Botón editar
-    const btnEdit = document.createElement("button");
-    btnEdit.textContent = "Editar";
-    btnEdit.onclick = () => editExpense(index);
-
-    // Botón borrar
-    const btnDelete = document.createElement("button");
-    btnDelete.textContent = "Borrar";
-    btnDelete.onclick = () => deleteExpense(index);
-
-    li.appendChild(btnEdit);
-    li.appendChild(btnDelete);
+    const left = document.createElement("div"); left.textContent = `${exp.date} · ${exp.title}`;
+    const amount = document.createElement("span"); amount.className = "badge-amount"; amount.textContent = fmt(exp.amount);
+    const actions = document.createElement("div"); actions.className = "actions-row";
+    const be = document.createElement("button"); be.className = "btn-small"; be.textContent = "Editar";
+    be.onclick = () => { editExpense(i); showToast("Gasto listo para editar"); };
+    const bd = document.createElement("button"); bd.className = "btn-small"; bd.textContent = "Borrar";
+    bd.onclick = () => { deleteExpense(i); showToast("Gasto borrado", "error"); };
+    actions.appendChild(be); actions.appendChild(bd);
+    li.appendChild(left); li.appendChild(amount); li.appendChild(actions);
     list.appendChild(li);
   });
 }
 
-function editExpense(index) {
-  const exp = expenses[index];
-  document.getElementById("g-title").value = exp.title;
-  document.getElementById("g-amount").value = exp.amount;
-  document.getElementById("g-date").value = exp.date;
-  deleteExpense(index);
+// ---------- CRUD helpers ----------
+function editExpense(i) {
+  const e = expenses[i];
+  $("g-title").value = e.title; $("g-amount").value = e.amount; $("g-date").value = e.date;
+  deleteExpense(i);
 }
-
-function deleteExpense(index) {
-  expenses.splice(index, 1);
+function deleteExpense(i) {
+  expenses.splice(i, 1);
   localStorage.setItem("expenses", JSON.stringify(expenses));
-  renderExpenses();
-  updateSummary();
+  renderExpenses(); updateSummary();
 }
 
-// ==== META DE AHORRO ====
-function setSavingGoal() {
-  const goal = prompt("¿Cuánto deseas ahorrar este mes?", savingGoal || "");
-  if (goal) {
-    savingGoal = parseFloat(goal) || 0;
-    localStorage.setItem("savingGoal", savingGoal);
-    updateSummary();
-  }
+// ---------- AUTH / FLOW ----------
+function showLogin() {
+  $("auth-card").style.display = "block";
+  $("app-shell").style.display = "none";
+}
+function showApp() {
+  $("auth-card").style.display = "none";
+  $("app-shell").style.display = "block";
+  showView("view-overview");           // Al entrar, solo KPIs + donut
 }
 
-// ==== RESUMEN ====
-function updateSummary() {
-  const totalExpenses = expenses.reduce((sum, exp) => sum + exp.amount, 0);
-  const available = salary - totalExpenses - savingGoal;
-  const suggested = (salary * 0.2).toFixed(2);
+function bindAuth() {
+  $("link-register").onclick = (e) => { e.preventDefault(); $("auth-area").style.display = "none"; $("register-area").style.display = "block"; };
+  $("link-back-login").onclick = (e) => { e.preventDefault(); $("register-area").style.display = "none"; $("auth-area").style.display = "block"; };
 
-  document.getElementById("suggested-saving").textContent =
-    `Meta manual: $${savingGoal.toFixed(2)} | Sugerido: $${suggested} | Disponible: $${available.toFixed(2)}`;
+  $("btn-login").onclick = () => {
+    const email = $("email").value.trim(), pass = $("password").value.trim();
+    const user = users.find(u => u.email === email && u.password === pass);
+    if (!user) return alert("Credenciales incorrectas");
+    currentUser = user; showApp();
+    $("user-name").textContent = currentUser.name || email.split("@")[0];
+    qs(".menu-name").textContent = currentUser.name || "Usuario";
+    qs(".menu-email").textContent = currentUser.email || email;
+    $("acc-email").value = currentUser.email || email;
+    $("acc-name").value = currentUser.name || "";
+    $("acc-currency").value = currentUser.currency || "USD";
+    renderExpenses(); updateSummary();
+  };
+
+  $("btn-register").onclick = () => {
+    const name = $("r-name").value.trim(), email = $("r-email").value.trim(), pass = $("r-password").value.trim();
+    const currency = $("r-currency").value;
+    if (!name || !email || !pass) return alert("Completa todos los campos");
+    if (users.some(u => u.email === email)) return alert("Ese correo ya está registrado");
+    users.push({ name, email, password: pass, currency });
+    localStorage.setItem("users", JSON.stringify(users));
+    alert("Usuario registrado. Ahora inicia sesión.");
+    $("register-area").style.display = "none"; $("auth-area").style.display = "block";
+  };
 }
 
-// ==== HISTORIAL (Extra) ====
-document.getElementById("btn-new-entry").addEventListener("click", () => {
-  document.getElementById("history-area").style.display = "block";
-  const tbody = document.querySelector("#history-table tbody");
-  tbody.innerHTML = "";
-
-  expenses.forEach((exp, i) => {
-    const row = document.createElement("tr");
-    row.innerHTML = `
-      <td>${exp.date}</td>
-      <td>${exp.title}</td>
-      <td>$${exp.amount.toFixed(2)}</td>
-      <td>
-        <button onclick="editExpense(${i})">Editar</button>
-        <button onclick="deleteExpense(${i})">Borrar</button>
-      </td>
-    `;
-    tbody.appendChild(row);
+// ---------- ACCOUNT MENU & MODAL ----------
+function bindAccount() {
+  // Abrir menú al pasar el mouse (CSS) y modal al click
+  $("client-logo").onclick = () => { $("account-menu").style.display = $("account-menu").style.display === "block" ? "none" : "block" };
+  document.addEventListener("click", (e) => {
+    const acc = qs(".account"); if (!acc) return;
+    if (!acc.contains(e.target)) $("account-menu").style.display = "none";
   });
-});
 
-document.getElementById("link-back-dashboard").addEventListener("click", () => {
-  document.getElementById("history-area").style.display = "none";
-  document.getElementById("dashboard").style.display = "block";
-});
+  $("btn-open-account").onclick = () => {
+    $("account-modal").classList.add("is-open");
+    $("acc-pass").value = "";
+  };
+  qsa("[data-close]").forEach(b => b.onclick = () => $("account-modal").classList.remove("is-open"));
+
+  $("btn-save-account").onclick = () => {
+    if (!currentUser) return;
+    const name = $("acc-name").value.trim();
+    const pass = $("acc-pass").value.trim();
+    const currency = $("acc-currency").value;
+
+    // actualizar en users[]
+    const idx = users.findIndex(u => u.email === currentUser.email);
+    if (idx >= 0) {
+      users[idx].name = name || users[idx].name;
+      if (pass) users[idx].password = pass;
+      users[idx].currency = currency;
+      localStorage.setItem("users", JSON.stringify(users));
+      currentUser = users[idx];
+    }
+
+    // reflejar en UI
+    $("user-name").textContent = currentUser.name || currentUser.email.split("@")[0];
+    qs(".menu-name").textContent = currentUser.name || "Usuario";
+    qs(".menu-email").textContent = currentUser.email;
+
+    $("account-modal").classList.remove("is-open");
+    showToast("Cuenta actualizada");
+  };
+
+  // Cerrar sesión
+  $("btn-logout").onclick = () => {
+    currentUser = null;
+    showLogin();
+    showToast("Sesión cerrada", "error");
+  };
+}
+
+// ---------- NEW / SAVE EVENTS ----------
+function bindDataActions() {
+  const goNew = qs('#btn-go-new');
+  if (goNew) goNew.onclick = () => { showView("view-new"); $("g-title").focus(); };
+
+  $("btn-save-salary").onclick = () => {
+    salary = parseFloat($("salary-input").value) || 0;
+    localStorage.setItem("salary", salary);
+    updateSummary(); showToast("Sueldo guardado");
+  };
+
+  $("btn-add-expense").onclick = () => {
+    const title = $("g-title").value.trim();
+    const amount = parseFloat($("g-amount").value);
+    const date = $("g-date").value;
+    if (!title || !amount || !date) return alert("Completa todos los campos del gasto");
+
+    expenses.push({ title, amount, date });
+    localStorage.setItem("expenses", JSON.stringify(expenses));
+    $("g-title").value = ""; $("g-amount").value = ""; $("g-date").value = "";
+    renderExpenses(); updateSummary(); showToast("Gasto agregado");
+  };
+
+  // Tabla en Historial
+  $("btn-new-entry").onclick = () => {
+    showView("view-history");
+    const tbody = qs("#history-table tbody"); tbody.innerHTML = "";
+    expenses.forEach((e, i) => {
+      const tr = document.createElement("tr");
+      tr.innerHTML = `<td>${e.date}</td><td>${e.title}</td><td>${fmt(e.amount)}</td>
+                      <td><button data-edit="${i}">Editar</button>
+                          <button data-del="${i}">Borrar</button></td>`;
+      tbody.appendChild(tr);
+    });
+    qs("#history-table").onclick = (ev) => {
+      const iEdit = ev.target.getAttribute("data-edit");
+      const iDel = ev.target.getAttribute("data-del");
+      if (iEdit !== null) { editExpense(Number(iEdit)); showToast("Gasto listo para editar"); }
+      if (iDel !== null) { deleteExpense(Number(iDel)); showToast("Gasto borrado", "error"); }
+    };
+  };
+}
+
+// ---------- INIT ----------
+(function init() {
+  bindAuth();
+  bindAccount();
+  bindDataActions();
+  initTabs();
+  showLogin();         // arranca en login
+})();
