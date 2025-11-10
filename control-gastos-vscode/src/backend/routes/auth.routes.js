@@ -5,6 +5,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user.model');
 const dotenv = require('dotenv');
+const auth = require('../middleware/auth.middleware');
 dotenv.config();
 
 // Register
@@ -33,5 +34,51 @@ router.post('/login', async (req, res) => {
     return res.json({ token, user: { id: user.id, email: user.email, name: user.name, currency: user.currency, monthly_salary: user.monthly_salary } });
   }catch(err){ console.error(err); res.status(500).json({ message: 'error' }); }
 });
+
+  // Get current user
+  router.get('/me', auth, async (req, res) => {
+    try {
+      const user = await User.findByPk(req.userId);
+      if (!user) return res.status(404).json({ message: 'Usuario no encontrado' });
+      res.json({ 
+        user: { 
+          id: user.id, 
+          email: user.email, 
+          name: user.name, 
+          currency: user.currency, 
+          monthly_salary: user.monthly_salary 
+        } 
+      });
+    } catch (err) { 
+      console.error(err); 
+      res.status(500).json({ message: 'error' }); 
+    }
+  });
+
+  // Update user settings
+  router.put('/settings', auth, async (req, res) => {
+    try {
+      const { monthly_salary, currency } = req.body;
+      const user = await User.findByPk(req.userId);
+      if (!user) return res.status(404).json({ message: 'Usuario no encontrado' });
+    
+      if (monthly_salary !== undefined) user.monthly_salary = monthly_salary;
+      if (currency) user.currency = currency;
+    
+      await user.save();
+      res.json({ 
+        user: { 
+          id: user.id, 
+          email: user.email, 
+          name: user.name, 
+          currency: user.currency, 
+          monthly_salary: user.monthly_salary 
+        } 
+      });
+    } catch (err) { 
+      console.error(err); 
+      res.status(500).json({ message: 'error' }); 
+    }
+  });
 
 module.exports = router;

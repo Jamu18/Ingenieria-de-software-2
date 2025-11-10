@@ -1,0 +1,80 @@
+{"level":"error","message":"Error migrando la base de datos: la autentificaci�n password fall� para el usuario �control_user�","name":"SequelizeConnectionError","original":{"code":"28P01","file":"auth.c","length":118,"line":"332","name":"error","routine":"auth_failed","severity":"FATAL"},"parent":{"code":"28P01","file":"auth.c","length":118,"line":"332","name":"error","routine":"auth_failed","severity":"FATAL"},"stack":"SequelizeConnectionError: la autentificaci�n password fall� para el usuario �control_user�\n    at Client._connectionCallback (C:\\Users\\Jaime M\\OneDrive\\Documentos\\Ingenieria-de-software-2\\control-gastos-vscode\\node_modules\\sequelize\\lib\\dialects\\postgres\\connection-manager.js:145:24)\n    at Client._handleErrorWhileConnecting (C:\\Users\\Jaime M\\OneDrive\\Documentos\\Ingenieria-de-software-2\\control-gastos-vscode\\node_modules\\pg\\lib\\client.js:336:19)\n    at Client._handleErrorMessage (C:\\Users\\Jaime M\\OneDrive\\Documentos\\Ingenieria-de-software-2\\control-gastos-vscode\\node_modules\\pg\\lib\\client.js:356:19)\n    at Connection.emit (node:events:524:28)\n    at C:\\Users\\Jaime M\\OneDrive\\Documentos\\Ingenieria-de-software-2\\control-gastos-vscode\\node_modules\\pg\\lib\\connection.js:116:12\n    at Parser.parse (C:\\Users\\Jaime M\\OneDrive\\Documentos\\Ingenieria-de-software-2\\control-gastos-vscode\\node_modules\\pg-protocol\\dist\\parser.js:36:17)\n    at Socket.<anonymous> (C:\\Users\\Jaime M\\OneDrive\\Documentos\\Ingenieria-de-software-2\\control-gastos-vscode\\node_modules\\pg-protocol\\dist\\index.js:11:42)\n    at Socket.emit (node:events:524:28)\n    at addChunk (node:internal/streams/readable:561:12)\n    at readableAddChunkPushByteMode (node:internal/streams/readable:512:3)","timestamp":"2025-11-10T15:35:41.750Z"}
+{"level":"error","message":"Error migrando la base de datos: la autentificaci�n password fall� para el usuario �postgres�","name":"SequelizeConnectionError","original":{"code":"28P01","file":"auth.c","length":114,"line":"332","name":"error","routine":"auth_failed","severity":"FATAL"},"parent":{"code":"28P01","file":"auth.c","length":114,"line":"332","name":"error","routine":"auth_failed","severity":"FATAL"},"stack":"SequelizeConnectionError: la autentificaci�n password fall� para el usuario �postgres�\n    at Client._connectionCallback (C:\\Users\\Jaime M\\OneDrive\\Documentos\\Ingenieria-de-software-2\\control-gastos-vscode\\node_modules\\sequelize\\lib\\dialects\\postgres\\connection-manager.js:145:24)\n    at Client._handleErrorWhileConnecting (C:\\Users\\Jaime M\\OneDrive\\Documentos\\Ingenieria-de-software-2\\control-gastos-vscode\\node_modules\\pg\\lib\\client.js:336:19)\n    at Client._handleErrorMessage (C:\\Users\\Jaime M\\OneDrive\\Documentos\\Ingenieria-de-software-2\\control-gastos-vscode\\node_modules\\pg\\lib\\client.js:356:19)\n    at Connection.emit (node:events:524:28)\n    at C:\\Users\\Jaime M\\OneDrive\\Documentos\\Ingenieria-de-software-2\\control-gastos-vscode\\node_modules\\pg\\lib\\connection.js:116:12\n    at Parser.parse (C:\\Users\\Jaime M\\OneDrive\\Documentos\\Ingenieria-de-software-2\\control-gastos-vscode\\node_modules\\pg-protocol\\dist\\parser.js:36:17)\n    at Socket.<anonymous> (C:\\Users\\Jaime M\\OneDrive\\Documentos\\Ingenieria-de-software-2\\control-gastos-vscode\\node_modules\\pg-protocol\\dist\\index.js:11:42)\n    at Socket.emit (node:events:524:28)\n    at addChunk (node:internal/streams/readable:561:12)\n    at readableAddChunkPushByteMode (node:internal/streams/readable:512:3)","timestamp":"2025-11-10T15:36:08.168Z"}
+{"level":"error","message":"Error migrando la base de datos: no existe la base de datos �control_gastos_db�","name":"SequelizeConnectionError","original":{"code":"3D000","file":"postinit.c","length":106,"line":"1034","name":"error","routine":"InitPostgres","severity":"FATAL"},"parent":{"code":"3D000","file":"postinit.c","length":106,"line":"1034","name":"error","routine":"InitPostgres","severity":"FATAL"},"stack":"SequelizeConnectionError: no existe la base de datos �control_gastos_db�\n    at Client._connectionCallback (C:\\Users\\Jaime M\\OneDrive\\Documentos\\Ingenieria-de-software-2\\control-gastos-vscode\\node_modules\\sequelize\\lib\\dialects\\postgres\\connection-manager.js:145:24)\n    at Client._handleErrorWhileConnecting (C:\\Users\\Jaime M\\OneDrive\\Documentos\\Ingenieria-de-software-2\\control-gastos-vscode\\node_modules\\pg\\lib\\client.js:336:19)\n    at Client._handleErrorMessage (C:\\Users\\Jaime M\\OneDrive\\Documentos\\Ingenieria-de-software-2\\control-gastos-vscode\\node_modules\\pg\\lib\\client.js:356:19)\n    at Connection.emit (node:events:524:28)\n    at C:\\Users\\Jaime M\\OneDrive\\Documentos\\Ingenieria-de-software-2\\control-gastos-vscode\\node_modules\\pg\\lib\\connection.js:116:12\n    at Parser.parse (C:\\Users\\Jaime M\\OneDrive\\Documentos\\Ingenieria-de-software-2\\control-gastos-vscode\\node_modules\\pg-protocol\\dist\\parser.js:36:17)\n    at Socket.<anonymous> (C:\\Users\\Jaime M\\OneDrive\\Documentos\\Ingenieria-de-software-2\\control-gastos-vscode\\node_modules\\pg-protocol\\dist\\index.js:11:42)\n    at Socket.emit (node:events:524:28)\n    at addChunk (node:internal/streams/readable:561:12)\n    at readableAddChunkPushByteMode (node:internal/streams/readable:512:3)","timestamp":"2025-11-10T15:36:54.859Z"}
+{"level":"info","message":"Base de datos migrada exitosamente","timestamp":"2025-11-10T15:43:09.135Z"}
+{"level":"info","message":"Conectado a la base de datos","timestamp":"2025-11-10T15:43:21.848Z"}
+{"level":"info","message":"Modelos sincronizados","timestamp":"2025-11-10T15:43:21.877Z"}
+{"level":"info","message":"Server started on port 3000","timestamp":"2025-11-10T15:43:21.883Z"}
+{"level":"info","message":"Conectado a la base de datos","timestamp":"2025-11-10T15:47:20.355Z"}
+{"level":"info","message":"Modelos sincronizados","timestamp":"2025-11-10T15:47:20.385Z"}
+{"level":"info","message":"Server started on port 3000","timestamp":"2025-11-10T15:47:20.388Z"}
+{"level":"info","message":"Conectado a la base de datos","timestamp":"2025-11-10T15:47:40.306Z"}
+{"level":"info","message":"Modelos sincronizados","timestamp":"2025-11-10T15:47:40.333Z"}
+{"level":"info","message":"Conectado a la base de datos","timestamp":"2025-11-10T15:48:33.838Z"}
+{"level":"info","message":"Modelos sincronizados","timestamp":"2025-11-10T15:48:33.868Z"}
+{"level":"info","message":"Server started on port 3001","timestamp":"2025-11-10T15:48:33.871Z"}
+{"level":"info","message":"Conectado a la base de datos","timestamp":"2025-11-10T16:26:06.911Z"}
+{"level":"info","message":"Modelos sincronizados","timestamp":"2025-11-10T16:26:06.938Z"}
+{"level":"info","message":"Conectado a la base de datos","timestamp":"2025-11-10T16:27:48.862Z"}
+{"level":"info","message":"Modelos sincronizados","timestamp":"2025-11-10T16:27:48.891Z"}
+{"level":"info","message":"Server started on port 3001","timestamp":"2025-11-10T16:27:48.894Z"}
+{"level":"info","message":"Conectado a la base de datos","timestamp":"2025-11-10T17:27:40.380Z"}
+{"level":"info","message":"Modelos sincronizados","timestamp":"2025-11-10T17:27:40.457Z"}
+{"level":"info","message":"Server started on port 3001","timestamp":"2025-11-10T17:27:40.464Z"}
+{"level":"info","message":"Conectado a la base de datos","timestamp":"2025-11-10T17:49:10.504Z"}
+{"level":"info","message":"Modelos sincronizados","timestamp":"2025-11-10T17:49:10.540Z"}
+{"level":"info","message":"Server started on port 3001","timestamp":"2025-11-10T17:49:10.545Z"}
+{"level":"info","message":"Conectado a la base de datos","timestamp":"2025-11-10T17:52:45.806Z"}
+{"level":"info","message":"Modelos sincronizados","timestamp":"2025-11-10T17:52:45.851Z"}
+{"level":"info","message":"Server started on port 3001","timestamp":"2025-11-10T17:52:45.856Z"}
+{"level":"info","message":"Conectado a la base de datos","timestamp":"2025-11-10T18:03:56.854Z"}
+{"level":"info","message":"Modelos sincronizados","timestamp":"2025-11-10T18:03:56.884Z"}
+{"level":"info","message":"Server started on port 3001","timestamp":"2025-11-10T18:03:56.887Z"}
+{"level":"info","message":"Conectado a la base de datos","timestamp":"2025-11-10T18:21:56.888Z"}
+{"level":"info","message":"Modelos sincronizados","timestamp":"2025-11-10T18:21:56.919Z"}
+{"level":"info","message":"Conectado a la base de datos","timestamp":"2025-11-10T18:22:11.153Z"}
+{"level":"info","message":"Modelos sincronizados","timestamp":"2025-11-10T18:22:11.188Z"}
+{"level":"info","message":"Conectado a la base de datos","timestamp":"2025-11-10T18:22:15.495Z"}
+{"level":"info","message":"Modelos sincronizados","timestamp":"2025-11-10T18:22:15.529Z"}
+{"level":"info","message":"Conectado a la base de datos","timestamp":"2025-11-10T18:22:25.964Z"}
+{"level":"info","message":"Modelos sincronizados","timestamp":"2025-11-10T18:22:25.993Z"}
+{"level":"info","message":"Server started on port 3001","timestamp":"2025-11-10T18:22:25.996Z"}
+{"level":"info","message":"Conectado a la base de datos","timestamp":"2025-11-10T18:23:16.050Z"}
+{"level":"info","message":"Modelos sincronizados","timestamp":"2025-11-10T18:23:16.080Z"}
+{"level":"info","message":"Server started on port 3002","timestamp":"2025-11-10T18:23:16.083Z"}
+{"level":"info","message":"Conectado a la base de datos","timestamp":"2025-11-10T18:25:34.821Z"}
+{"level":"info","message":"Modelos sincronizados","timestamp":"2025-11-10T18:25:34.857Z"}
+{"level":"info","message":"Server started on port 3002","timestamp":"2025-11-10T18:25:34.861Z"}
+{"level":"info","message":"Conectado a la base de datos","timestamp":"2025-11-10T18:25:58.614Z"}
+{"level":"info","message":"Modelos sincronizados","timestamp":"2025-11-10T18:25:58.644Z"}
+{"level":"info","message":"Server started on port 3002","timestamp":"2025-11-10T18:25:58.648Z"}
+{"level":"info","message":"Conectado a la base de datos","timestamp":"2025-11-10T18:28:56.950Z"}
+{"level":"info","message":"Modelos sincronizados","timestamp":"2025-11-10T18:28:56.979Z"}
+{"level":"info","message":"Server started on port 3002","timestamp":"2025-11-10T18:28:56.983Z"}
+{"level":"info","message":"Conectado a la base de datos","timestamp":"2025-11-10T18:29:12.043Z"}
+{"level":"info","message":"Modelos sincronizados","timestamp":"2025-11-10T18:29:12.079Z"}
+{"level":"info","message":"Server started on port 3002","timestamp":"2025-11-10T18:29:12.082Z"}
+{"level":"info","message":"Conectado a la base de datos","timestamp":"2025-11-10T18:29:53.514Z"}
+{"level":"info","message":"Modelos sincronizados","timestamp":"2025-11-10T18:29:53.545Z"}
+{"level":"info","message":"Server started on port 3002","timestamp":"2025-11-10T18:29:53.548Z"}
+{"level":"info","message":"Conectado a la base de datos","timestamp":"2025-11-10T18:31:38.739Z"}
+{"level":"info","message":"Modelos sincronizados","timestamp":"2025-11-10T18:31:38.773Z"}
+{"level":"info","message":"Server started on port 3002","timestamp":"2025-11-10T18:31:38.776Z"}
+{"level":"info","message":"Conectado a la base de datos","timestamp":"2025-11-10T18:32:29.442Z"}
+{"level":"info","message":"Modelos sincronizados","timestamp":"2025-11-10T18:32:29.475Z"}
+{"level":"info","message":"Server started on port 3002","timestamp":"2025-11-10T18:32:29.478Z"}
+{"level":"info","message":"Conectado a la base de datos","timestamp":"2025-11-10T18:34:13.242Z"}
+{"level":"info","message":"Modelos sincronizados","timestamp":"2025-11-10T18:34:13.279Z"}
+{"level":"info","message":"Server started on port 3002","timestamp":"2025-11-10T18:34:13.284Z"}
+{"level":"info","message":"Conectado a la base de datos","timestamp":"2025-11-10T18:34:33.005Z"}
+{"level":"info","message":"Modelos sincronizados","timestamp":"2025-11-10T18:34:33.038Z"}
+{"level":"info","message":"Server started on port 3002","timestamp":"2025-11-10T18:34:33.041Z"}
+{"level":"info","message":"Conectado a la base de datos","timestamp":"2025-11-10T18:35:22.375Z"}
+{"level":"info","message":"Modelos sincronizados","timestamp":"2025-11-10T18:35:22.406Z"}
+{"level":"info","message":"Server started on port 3002","timestamp":"2025-11-10T18:35:22.409Z"}
+{"level":"info","message":"Conectado a la base de datos","timestamp":"2025-11-10T18:38:48.423Z"}
+{"level":"info","message":"Modelos sincronizados","timestamp":"2025-11-10T18:38:48.456Z"}
+{"level":"info","message":"Server started on port 3002","timestamp":"2025-11-10T18:38:48.462Z"}
+{"level":"info","message":"Conectado a la base de datos","timestamp":"2025-11-10T18:39:13.031Z"}
+{"level":"info","message":"Modelos sincronizados","timestamp":"2025-11-10T18:39:13.064Z"}
+{"level":"info","message":"Server started on port 3002","timestamp":"2025-11-10T18:39:13.067Z"}

@@ -1,0 +1,6 @@
+{
+  // Avoid automatic JSON Schema downloads (fixes "Service Unavailable" warnings from schemastore)
+  "json.schemaDownload.enable": false,
+  // Keep JSON validation on but don't attempt remote schema fetches
+  "json.validate.enable": true
+}

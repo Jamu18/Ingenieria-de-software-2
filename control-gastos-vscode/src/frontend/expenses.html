@@ -38,6 +38,7 @@
                     <option value="personal">Gastos personales</option>
                     <option value="otros">Otros</option>
                 </select>
+                <textarea id="g-note" placeholder="Notas (opcional)"></textarea>
                 <button id="btn-add-expense" class="btn-primary">Agregar gasto</button>
             </div>
         </div>
@@ -58,12 +59,6 @@
             </a>
         </div>
     </div>
-    <script src="session.js"></script>
-    <script>
-        if (!checkSession()) {
-            window.location.href = 'index.html';
-        }
-    </script>
-    <script src="expenses.js"></script>
+    <script src="main.js"></script>
 </body>
 </html>
