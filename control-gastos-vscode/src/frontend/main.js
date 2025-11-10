@@ -7,7 +7,17 @@ let savingGoal = parseFloat(localStorage.getItem("savingGoal")) || 0;
 const $ = (id) => document.getElementById(id);
 const qs = (s) => document.querySelector(s);
 const qsa = (s) => Array.from(document.querySelectorAll(s));
-const fmt = (n) => `$${(n || 0).toFixed(2)}`;
+
+// Símbolos de moneda y formato dinámico según el usuario actual (o USD por defecto)
+const currencySymbols = { USD: '$', EUR: '€', JPY: '¥', GBP: '£', CNY: '¥' };
+const getCurrencySymbol = () => {
+  if (currentUser && currentUser.currency) return currencySymbols[currentUser.currency] || currentUser.currency;
+  // Si no hay usuario, intentar usar la moneda guardada en localStorage (por compatibilidad)
+  const saved = localStorage.getItem('currency') || null;
+  if (saved) return currencySymbols[saved] || saved;
+  return currencySymbols['USD'];
+};
+const fmt = (n) => `${getCurrencySymbol()}${(n || 0).toFixed(2)}`;
 
 // Toast
 function showToast(msg, type = "success") {
@@ -23,7 +33,19 @@ function showView(id) {
   $(id).classList.add("is-visible");
   qsa(".tab").forEach(t => t.classList.toggle("is-active", t.dataset.view === id));
 }
-function initTabs() { qsa(".tab").forEach(b => b.addEventListener("click", () => showView(b.dataset.view))); }
+
+function initTabs() { 
+  const tabs = qsa(".tab");
+  tabs.forEach(tab => {
+    tab.addEventListener("click", () => {
+      const viewId = tab.dataset.view;
+      if (viewId) {
+        showView(viewId);
+        console.log('Cambiando a vista:', viewId); // Para debug
+      }
+    });
+  });
+}
 
 // Donut
 const CIRC = 2 * Math.PI * 52;
@@ -50,9 +72,9 @@ function renderStats() {
 function updateSummary() {
   const spent = expenses.reduce((s, e) => s + e.amount, 0);
   const available = salary - spent - (savingGoal || 0);
-  const suggested = (salary * 0.2).toFixed(2);
+  const suggested = (salary * 0.2);
   const el = $("suggested-saving");
-  if (el) el.textContent = `Meta manual: $${(savingGoal || 0).toFixed(2)} | Sugerido: $${suggested} | Disponible: $${(available || 0).toFixed(2)}`;
+  if (el) el.textContent = `Meta manual: ${fmt(savingGoal || 0)} | Sugerido: ${fmt(suggested)} | Disponible: ${fmt(available || 0)}`;
   renderStats();
 }
 
@@ -122,6 +144,8 @@ function bindAuth() {
     if (users.some(u => u.email === email)) return alert("Ese correo ya está registrado");
     users.push({ name, email, password: pass, currency });
     localStorage.setItem("users", JSON.stringify(users));
+    // Guardar moneda preferida globalmente para usuarios no logueados
+    localStorage.setItem('currency', currency);
     alert("Usuario registrado. Ahora inicia sesión.");
     $("register-area").style.display = "none"; $("auth-area").style.display = "block";
   };
@@ -159,7 +183,16 @@ function bindAccount() {
   $("client-logo").onclick = () => { $("account-menu").style.display = $("account-menu").style.display === "block" ? "none" : "block"; };
   document.addEventListener("click", (e) => { const acc = qs(".account"); if (!acc) return; if (!acc.contains(e.target)) $("account-menu").style.display = "none"; });
 
-  $("btn-open-account").onclick = () => { $("account-modal").classList.add("is-open"); $("acc-pass").value = ""; loadSavedLogo(); };
+  $("btn-open-account").onclick = () => {
+    // Abrir modal de cuenta. Si no existe un logo guardado, inicializar con el logo por defecto
+    $("account-modal").classList.add("is-open");
+    $("acc-pass").value = "";
+    if (!localStorage.getItem(LOGO_KEY)) {
+      // Guardamos la ruta del logo por defecto para que se muestre como "predeterminado" y persista
+      localStorage.setItem(LOGO_KEY, DEFAULT_LOGO);
+    }
+    loadSavedLogo();
+  };
   qsa("[data-close]").forEach(b => b.onclick = () => $("account-modal").classList.remove("is-open"));
 
   $("btn-save-account").onclick = () => {
@@ -175,6 +208,8 @@ function bindAccount() {
       localStorage.setItem("users", JSON.stringify(users));
       currentUser = users[idx];
     }
+    // Actualizar moneda preferida global
+    localStorage.setItem('currency', currency);
     $("user-name").textContent = currentUser.name || currentUser.email.split("@")[0];
     qs(".menu-name").textContent = currentUser.name || "Usuario";
     qs(".menu-email").textContent = currentUser.email;
