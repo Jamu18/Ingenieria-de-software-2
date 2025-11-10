@@ -28,4 +28,26 @@ router.get('/', auth, async (req, res) => {
   }catch(err){ console.error(err); res.status(500).json({ message: 'error' }); }
 });
 
+  // Delete expense
+  router.delete('/:id', auth, async (req, res) => {
+    try {
+      const expense = await Expense.findOne({ 
+        where: { 
+          id: req.params.id, 
+          user_id: req.userId 
+        } 
+      });
+    
+      if (!expense) {
+        return res.status(404).json({ message: 'Gasto no encontrado' });
+      }
+    
+      await expense.destroy();
+      res.json({ message: 'Gasto eliminado' });
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ message: 'error' });
+    }
+  });
+
 module.exports = router;
