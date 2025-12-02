@@ -1,63 +1,203 @@
+# Control de Gastos Personales
 
-# Control de Gastos Personales (Visual Studio Code)
+Aplicación web para gestionar gastos personales con autenticación, registro de gastos y metas de ahorro.
 
-Proyecto mínimo para Control de Gastos Personales. Incluye backend en Node.js + Express (estructurado para usar MySQL con Sequelize)
-y un frontend estático (HTML/JS) que se comunica por fetch a la API.
+## 📁 Estructura del Proyecto
 
-## Estructura
-- src/backend: código del servidor (Express)
-- src/frontend: HTML/CSS/JS del cliente
-- .env.example: variables de entorno
-- schema.sql: script SQL para crear la base de datos y tablas en MySQL
-- package.json: scripts para desarrollo
-
-## Cómo usar (pasos detallados para Windows PowerShell)
-
-1. Abre Visual Studio Code en la carpeta `control-gastos-vscode`.
-
-2. Copia el archivo de ejemplo de variables de entorno y edítalo:
-
-```powershell
-cd "c:\Users\Jaime M\OneDrive\Documentos\Ingenieria-de-software-2\control-gastos-vscode"
-copy .env.example .env
-notepad .env
+```
+/
+├── backend/              # Backend Node.js + Express + PostgreSQL
+│   ├── server.js        # Punto de entrada
+│   ├── app.js           # Configuración Express
+│   ├── db.js            # Conexión Sequelize
+│   ├── models/          # Modelos de base de datos
+│   ├── routes/          # Endpoints API
+│   ├── middleware/      # Middleware (auth JWT)
+│   └── config/          # Configuración (logger, database)
+│
+├── frontend/            # Frontend React + TypeScript + Vite
+│   ├── src/            # Código fuente React
+│   ├── public/         # Assets estáticos
+│   └── vite.config.ts  # Configuración Vite
+│
+├── frontend-reference/  # Frontend HTML/CSS/JS vanilla (referencia)
+│   ├── index.html      # Login/Dashboard
+│   ├── expenses.html   # Registro de gastos
+│   ├── main.js         # Lógica JavaScript
+│   └── styles.css      # Diseño shadcn-inspired
+│
+├── .env                # Variables de entorno (NO COMMITEAR)
+├── .env.example        # Template de .env
+├── package.json        # Dependencias backend
+└── schema.sql          # Script SQL para crear base de datos
 ```
 
-Rellena las variables: DB_HOST, DB_PORT, DB_NAME, DB_USER, DB_PASS y JWT_SECRET.
+## 🚀 Instalación
 
-3. Instala dependencias (si no lo hiciste ya):
+### 1. Instalar dependencias del backend
 
-```powershell
+```bash
 npm install
 ```
 
-4. Crear la base de datos y tablas (requiere MySQL instalado). Opciones:
+### 2. Instalar dependencias del frontend
 
-- Usando cliente mysql (si está en PATH):
-
-```powershell
-mysql -u <DB_USER> -p -h <DB_HOST> < <path-to-project>\schema.sql
+```bash
+cd frontend
+npm install
+cd ..
 ```
 
-- Si no tienes MySQL disponible, puedes usar Docker (ejemplo):
+### 3. Configurar base de datos
 
-```powershell
-docker run --name mysql-dev -e MYSQL_ROOT_PASSWORD=secret -e MYSQL_DATABASE=control_gastos_db -p 3306:3306 -d mysql:8
-# Luego importa schema.sql desde tu host usando el cliente mysql o herramientas GUI
+Copia el archivo `.env.example` a `.env` y configura tus credenciales de PostgreSQL:
+
+```bash
+cp .env.example .env
 ```
 
-5. Levantar servidor Node.js:
+Edita `.env`:
 
-```powershell
-npm run start
+```env
+DB_HOST=localhost
+DB_PORT=5432
+DB_NAME=control_gastos_db
+DB_USER=postgres
+DB_PASS=tu_password
+JWT_SECRET=tu_secreto_jwt_muy_seguro
+PORT=3000
 ```
 
-El servidor por defecto escucha en el puerto indicado en `.env` (o 3000).
+### 4. Crear base de datos
 
-6. Abrir la aplicación frontend en el navegador: visita `http://localhost:3000/`.
+```bash
+# Opción 1: Usando psql
+psql -U postgres -c "CREATE DATABASE control_gastos_db;"
 
-Notas:
-- El backend intenta conectar y sincronizar la base de datos al arrancar. Si no hay configuración de DB válida, el servidor seguirá en modo degradado y el frontend todavía se servirá (útil para desarrollo del cliente estático).
-- Si deseas ejecutar solo la interfaz sin backend, abre `src/frontend/index.html` localmente (algunos navegadores bloquean fetch a APIs locales por CORS si lo abres como archivo).
+# Opción 2: Usando Docker
+docker run --name postgres-dev -e POSTGRES_PASSWORD=secret -e POSTGRES_DB=control_gastos_db -p 5432:5432 -d postgres:15
 
--- Este paquete es la base que podrás adaptar. Contiene también `schema.sql` para crear las tablas MySQL.
+# Opción 3: Ejecutar schema.sql
+psql -U postgres -d control_gastos_db -f schema.sql
+```
+
+## 🎯 Uso
+
+### Desarrollo (Backend + Frontend simultáneamente)
+
+```bash
+npm run dev:all
+```
+
+Este comando inicia:
+- **Backend** en `http://localhost:3000`
+- **Frontend** en `http://localhost:5173`
+
+### Solo Backend
+
+```bash
+npm run dev
+```
+
+### Solo Frontend
+
+```bash
+npm run dev:frontend
+```
+
+### Producción
+
+```bash
+# Backend
+npm start
+
+# Frontend (primero hacer build)
+cd frontend
+npm run build
+# Los archivos se sirven desde backend/dist
+```
+
+## 📚 API Endpoints
+
+### Autenticación
+
+- `POST /api/auth/register` - Registrar nuevo usuario
+- `POST /api/auth/login` - Iniciar sesión
+- `GET /api/auth/me` - Obtener usuario actual (requiere auth)
+- `PUT /api/auth/settings` - Actualizar configuración (requiere auth)
+
+### Gastos
+
+- `POST /api/expenses` - Crear gasto (requiere auth)
+- `GET /api/expenses?month=YYYY-MM` - Listar gastos (requiere auth)
+- `DELETE /api/expenses/:id` - Eliminar gasto (requiere auth)
+
+## 🛠️ Stack Tecnológico
+
+### Backend
+- **Node.js** + **Express** - Servidor web
+- **PostgreSQL** - Base de datos
+- **Sequelize** - ORM
+- **JWT** - Autenticación
+- **bcrypt** - Hash de contraseñas
+- **Winston** - Logging
+
+### Frontend
+- **React 19** - Framework UI
+- **TypeScript** - Tipado estático
+- **Vite** - Build tool
+- **React Router** - Routing
+- **Axios** - HTTP client
+
+### Frontend Reference (Vanilla)
+- **HTML5** + **CSS3** + **JavaScript ES6**
+- Sistema de diseño inspirado en shadcn/ui
+- Sin frameworks (solo vanilla JS)
+
+## 📝 Notas
+
+- El **frontend-reference/** es el frontend original en HTML/CSS/JS que funciona correctamente
+- El **frontend/** es la versión nueva en React que estamos desarrollando
+- Usa **frontend-reference/** como guía para implementar las funcionalidades en React
+- La base de datos es **PostgreSQL** (no MySQL como indica el README viejo)
+
+## 🔒 Seguridad
+
+- Las contraseñas se hashean con bcrypt antes de guardarse
+- JWT para autenticación stateless
+- Middleware de autenticación protege rutas privadas
+- Variables sensibles en `.env` (no committear)
+
+## 📦 Scripts Disponibles
+
+```bash
+npm start           # Iniciar backend (producción)
+npm run dev         # Iniciar backend (desarrollo con nodemon)
+npm run dev:frontend    # Iniciar frontend
+npm run dev:all     # Iniciar backend + frontend simultáneamente
+npm test            # Ejecutar tests
+npm run migrate     # Ejecutar migraciones
+```
+
+## 🐛 Troubleshooting
+
+### Puerto ocupado
+Si el puerto 3000 o 5173 está ocupado:
+
+```bash
+# Matar proceso en puerto 3000
+lsof -ti:3000 | xargs kill -9
+
+# Matar proceso en puerto 5173
+lsof -ti:5173 | xargs kill -9
+```
+
+### Error de conexión a base de datos
+- Verifica que PostgreSQL esté corriendo
+- Revisa las credenciales en `.env`
+- Asegúrate de que la base de datos existe
+
+### Frontend en blanco
+- Abre la consola del navegador (F12)
+- Verifica que el backend esté corriendo
+- Revisa que las rutas del proxy en `vite.config.ts` sean correctas
