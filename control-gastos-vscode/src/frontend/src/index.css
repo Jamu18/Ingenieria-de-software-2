@@ -63,4 +63,275 @@
 body {
   background-color: hsl(var(--color-background));
   color: hsl(var(--color-foreground));
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Dark mode adjustments for main content areas */
+.dark {
+  color-scheme: dark;
+}
+
+.dark .bg-gray-50 {
+  background-color: rgb(31 41 55) !important;
+}
+
+.dark .bg-white {
+  background-color: rgb(17 24 39) !important;
+}
+
+.dark .text-gray-900 {
+  color: rgb(243 244 246) !important;
+}
+
+.dark .text-gray-800 {
+  color: rgb(229 231 235) !important;
+}
+
+.dark .text-gray-700 {
+  color: rgb(209 213 219) !important;
+}
+
+.dark .text-gray-600 {
+  color: rgb(156 163 175) !important;
+}
+
+.dark .text-gray-500 {
+  color: rgb(107 114 128) !important;
+}
+
+.dark .text-gray-400 {
+  color: rgb(156 163 175) !important;
+}
+
+.dark .text-gray-300 {
+  color: rgb(209 213 219) !important;
+}
+
+.dark .text-gray-200 {
+  color: rgb(229 231 235) !important;
+}
+
+.dark .text-gray-100 {
+  color: rgb(243 244 246) !important;
+}
+
+.dark .bg-gray-200 {
+  background-color: rgb(55 65 81) !important;
+}
+
+.dark .bg-gray-300 {
+  background-color: rgb(75 85 99) !important;
+}
+
+.dark .bg-gray-400 {
+  background-color: rgb(107 114 128) !important;
+}
+
+.dark .border-gray-200 {
+  border-color: rgb(55 65 81) !important;
+}
+
+.dark .border-gray-300 {
+  border-color: rgb(75 85 99) !important;
+}
+
+.dark .border {
+  border-color: rgb(55 65 81) !important;
+}
+
+/* Cards in dark mode */
+.dark .shadow-lg,
+.dark .shadow-xl,
+.dark .shadow-2xl {
+  box-shadow: 0 0 0 1px rgb(55 65 81), 0 10px 15px -3px rgba(0, 0, 0, 0.3) !important;
+}
+
+/* Gradient backgrounds - adjust lighter ones */
+.dark .from-purple-50 {
+  --tw-gradient-from: rgb(88 28 135) !important;
+}
+
+.dark .to-pink-50 {
+  --tw-gradient-to: rgb(131 24 67) !important;
+}
+
+.dark .from-blue-50 {
+  --tw-gradient-from: rgb(29 78 216) !important;
+}
+
+.dark .to-indigo-50 {
+  --tw-gradient-to: rgb(79 70 229) !important;
+}
+
+.dark .from-gray-50 {
+  --tw-gradient-from: rgb(31 41 55) !important;
+}
+
+.dark .to-blue-50 {
+  --tw-gradient-to: rgb(30 58 138) !important;
+}
+
+/* Input fields */
+.dark input,
+.dark textarea,
+.dark select {
+  background-color: rgb(31 41 55) !important;
+  border-color: rgb(55 65 81) !important;
+  color: rgb(243 244 246) !important;
+}
+
+.dark input::placeholder,
+.dark textarea::placeholder {
+  color: rgb(107 114 128) !important;
+}
+
+/* Input focus states */
+.dark input:focus,
+.dark textarea:focus,
+.dark select:focus {
+  border-color: rgb(99 102 241) !important;
+  box-shadow: 0 0 0 1px rgb(99 102 241) !important;
+}
+
+/* Disabled inputs */
+.dark input:disabled,
+.dark textarea:disabled,
+.dark select:disabled {
+  background-color: rgb(17 24 39) !important;
+  color: rgb(107 114 128) !important;
+  opacity: 0.6;
+}
+
+/* Buttons with outline variant */
+.dark button[class*="border-gray"] {
+  border-color: rgb(55 65 81) !important;
+  color: rgb(209 213 219) !important;
+}
+
+.dark button[class*="border-gray"]:hover {
+  background-color: rgb(31 41 55) !important;
+  color: rgb(243 244 246) !important;
+}
+
+/* Success and error messages */
+.dark .bg-green-50 {
+  background-color: rgb(20 83 45) !important;
+}
+
+.dark .text-green-800 {
+  color: rgb(134 239 172) !important;
+}
+
+.dark .border-green-200 {
+  border-color: rgb(34 197 94) !important;
+}
+
+.dark .bg-red-50 {
+  background-color: rgb(127 29 29) !important;
+}
+
+.dark .text-red-800 {
+  color: rgb(252 165 165) !important;
+}
+
+.dark .border-red-200 {
+  border-color: rgb(239 68 68) !important;
+}
+
+.dark .bg-blue-50 {
+  background-color: rgb(30 58 138) !important;
+}
+
+.dark .text-blue-800 {
+  color: rgb(147 197 253) !important;
+}
+
+.dark .border-blue-200 {
+  border-color: rgb(59 130 246) !important;
+}
+
+/* Category badges and colored elements */
+.dark .bg-orange-100 {
+  background-color: rgb(120 53 15) !important;
+}
+
+.dark .text-orange-700 {
+  color: rgb(253 186 116) !important;
+}
+
+.dark .bg-blue-100 {
+  background-color: rgb(30 58 138) !important;
+}
+
+.dark .text-blue-700 {
+  color: rgb(147 197 253) !important;
+}
+
+.dark .bg-purple-100 {
+  background-color: rgb(88 28 135) !important;
+}
+
+.dark .text-purple-700 {
+  color: rgb(216 180 254) !important;
+}
+
+.dark .bg-red-100 {
+  background-color: rgb(127 29 29) !important;
+}
+
+.dark .text-red-700 {
+  color: rgb(252 165 165) !important;
+}
+
+.dark .bg-pink-100 {
+  background-color: rgb(131 24 67) !important;
+}
+
+.dark .text-pink-700 {
+  color: rgb(249 168 212) !important;
+}
+
+.dark .bg-green-100 {
+  background-color: rgb(20 83 45) !important;
+}
+
+.dark .text-green-700 {
+  color: rgb(134 239 172) !important;
+}
+
+.dark .bg-gray-100 {
+  background-color: rgb(55 65 81) !important;
+}
+
+.dark .text-gray-700 {
+  color: rgb(209 213 219) !important;
+}
+
+/* Hover states for category badges */
+.dark .hover\:bg-orange-200:hover {
+  background-color: rgb(154 52 18) !important;
+}
+
+.dark .hover\:bg-blue-200:hover {
+  background-color: rgb(37 99 235) !important;
+}
+
+.dark .hover\:bg-purple-200:hover {
+  background-color: rgb(107 33 168) !important;
+}
+
+.dark .hover\:bg-red-200:hover {
+  background-color: rgb(153 27 27) !important;
+}
+
+.dark .hover\:bg-pink-200:hover {
+  background-color: rgb(157 23 77) !important;
+}
+
+.dark .hover\:bg-green-200:hover {
+  background-color: rgb(22 101 52) !important;
+}
+
+.dark .hover\:bg-gray-200:hover {
+  background-color: rgb(75 85 99) !important;
 }

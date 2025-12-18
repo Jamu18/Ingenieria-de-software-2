@@ -26,6 +26,18 @@ export const authService = {
     return response.data
   },
 
+  // Update user profile (name, email)
+  async updateProfile(data: { name?: string; email?: string }): Promise<{ user: User }> {
+    const response = await api.put<{ user: User }>('/auth/profile', data)
+    return response.data
+  },
+
+  // Change password
+  async changePassword(data: { currentPassword: string; newPassword: string }): Promise<{ message: string }> {
+    const response = await api.put<{ message: string }>('/auth/password', data)
+    return response.data
+  },
+
   // Logout (client-side only)
   logout() {
     localStorage.removeItem('token')

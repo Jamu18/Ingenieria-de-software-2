@@ -51,12 +51,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     authService.logout()
   }
 
+  const updateUser = (updatedUser: User) => {
+    setUser(updatedUser)
+    localStorage.setItem('user', JSON.stringify(updatedUser))
+  }
+
   const value: AuthContextType = {
     user,
     token,
     login,
     register,
     logout,
+    updateUser,
     isAuthenticated: !!token,
     isLoading,
   }

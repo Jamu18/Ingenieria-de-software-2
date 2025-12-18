@@ -1,0 +1,21 @@
+# Pruebas Automatizadas - Control de Gastos
+# Instalación: pip install -r requirements.txt
+
+# Selenium para pruebas funcionales
+selenium==4.16.0
+webdriver-manager==4.0.1
+
+# Locust para pruebas de rendimiento
+locust==2.20.0
+
+# Pytest para organización de pruebas
+pytest==7.4.3
+pytest-html==4.1.1
+pytest-xdist==3.5.0
+
+# Utilidades
+python-dotenv==1.0.0
+requests==2.31.0
+
+# Reportes
+allure-pytest==2.13.2

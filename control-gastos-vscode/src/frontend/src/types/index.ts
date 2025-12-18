@@ -47,6 +47,35 @@ export interface CreateExpenseData {
   note?: string
 }
 
+// Savings Goal types
+export interface SavingsGoal {
+  id: number
+  user_id: number
+  name: string
+  target_amount: number
+  current_amount: number
+  deadline?: string
+  color: string
+  createdAt?: string
+  updatedAt?: string
+}
+
+export interface CreateSavingsGoalData {
+  name: string
+  target_amount: number
+  current_amount?: number
+  deadline?: string
+  color?: string
+}
+
+export interface UpdateSavingsGoalData {
+  name?: string
+  target_amount?: number
+  current_amount?: number
+  deadline?: string
+  color?: string
+}
+
 // Context types
 export interface AuthContextType {
   user: User | null
@@ -54,6 +83,7 @@ export interface AuthContextType {
   login: (credentials: LoginCredentials) => Promise<void>
   register: (data: RegisterData) => Promise<void>
   logout: () => void
+  updateUser: (user: User) => void
   isAuthenticated: boolean
   isLoading: boolean
 }

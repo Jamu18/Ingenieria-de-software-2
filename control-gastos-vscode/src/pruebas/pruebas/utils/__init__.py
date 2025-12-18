@@ -1,3 +1,0 @@
-"""
-Utilidades para las pruebas
-"""

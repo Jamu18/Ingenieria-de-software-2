@@ -11,7 +11,6 @@ import {
   Plus,
   Trash2,
   Search,
-  Calendar,
   Filter,
   X
 } from 'lucide-react'
@@ -27,6 +26,21 @@ const CATEGORIES = [
   { value: 'other', label: 'Otro', color: 'bg-gray-100 text-gray-700' }
 ]
 
+const MONTHS = [
+  { value: '01', label: 'Ene' },
+  { value: '02', label: 'Feb' },
+  { value: '03', label: 'Mar' },
+  { value: '04', label: 'Abr' },
+  { value: '05', label: 'May' },
+  { value: '06', label: 'Jun' },
+  { value: '07', label: 'Jul' },
+  { value: '08', label: 'Ago' },
+  { value: '09', label: 'Sep' },
+  { value: '10', label: 'Oct' },
+  { value: '11', label: 'Nov' },
+  { value: '12', label: 'Dic' }
+]
+
 export function ExpensesPage() {
   const { user } = useAuth()
   const [searchParams, setSearchParams] = useSearchParams()
@@ -34,7 +48,11 @@ export function ExpensesPage() {
   const [loading, setLoading] = useState(true)
   const [showForm, setShowForm] = useState(searchParams.get('new') === 'true')
   const [searchQuery, setSearchQuery] = useState('')
-  const [selectedMonth, setSelectedMonth] = useState(new Date().toISOString().slice(0, 7))
+
+  const currentDate = new Date()
+  const [selectedYear, setSelectedYear] = useState(currentDate.getFullYear())
+  const [selectedMonthNum, setSelectedMonthNum] = useState(String(currentDate.getMonth() + 1).padStart(2, '0'))
+  const selectedMonth = `${selectedYear}-${selectedMonthNum}`
 
   // Form state
   const [formData, setFormData] = useState<CreateExpenseData>({
@@ -49,7 +67,7 @@ export function ExpensesPage() {
 
   useEffect(() => {
     loadExpenses()
-  }, [selectedMonth])
+  }, [selectedYear, selectedMonthNum])
 
   const loadExpenses = async () => {
     try {
@@ -113,27 +131,27 @@ export function ExpensesPage() {
 
   return (
     <Layout>
-      <div className="min-h-full bg-gradient-to-br from-gray-50 to-blue-50 p-8">
+      <div className="min-h-full bg-gradient-to-br from-gray-50 to-blue-50 p-4 sm:p-6 lg:p-8">
         {/* Header */}
-        <div className="mb-8 flex items-center justify-between">
+        <div className="mb-6 sm:mb-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
-            <h1 className="text-4xl font-bold text-gray-900">Mis Gastos</h1>
-            <p className="mt-2 text-gray-600">
+            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900">Mis Gastos</h1>
+            <p className="mt-2 text-sm sm:text-base text-gray-600">
               Gestiona y controla todos tus gastos
             </p>
           </div>
           <Button
             onClick={() => setShowForm(!showForm)}
-            className="gap-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700"
+            className="gap-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 w-full sm:w-auto"
           >
             {showForm ? (
               <>
-                <X className="h-5 w-5" />
+                <X className="h-4 w-4 sm:h-5 sm:w-5" />
                 Cancelar
               </>
             ) : (
               <>
-                <Plus className="h-5 w-5" />
+                <Plus className="h-4 w-4 sm:h-5 sm:w-5" />
                 Nuevo Gasto
               </>
             )}
@@ -142,27 +160,28 @@ export function ExpensesPage() {
 
         {/* New Expense Form */}
         {showForm && (
-          <Card className="mb-8 border-0 shadow-lg">
+          <Card className="mb-6 sm:mb-8 border-0 shadow-lg">
             <CardHeader>
-              <CardTitle>Registrar nuevo gasto</CardTitle>
-              <CardDescription>Completa los datos del gasto</CardDescription>
+              <CardTitle className="text-lg sm:text-xl">Registrar nuevo gasto</CardTitle>
+              <CardDescription className="text-xs sm:text-sm">Completa los datos del gasto</CardDescription>
             </CardHeader>
             <CardContent>
               <form onSubmit={handleSubmit} className="space-y-4">
-                <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                   <div className="space-y-2">
-                    <Label htmlFor="title">Título *</Label>
+                    <Label htmlFor="title" className="text-xs sm:text-sm">Título *</Label>
                     <Input
                       id="title"
                       placeholder="Ej: Almuerzo en restaurante"
                       value={formData.title}
                       onChange={(e) => setFormData({ ...formData, title: e.target.value })}
                       required
+                      className="text-sm sm:text-base"
                     />
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="amount">Monto *</Label>
+                    <Label htmlFor="amount" className="text-xs sm:text-sm">Monto *</Label>
                     <Input
                       id="amount"
                       type="number"
@@ -171,16 +190,17 @@ export function ExpensesPage() {
                       value={formData.amount || ''}
                       onChange={(e) => setFormData({ ...formData, amount: parseFloat(e.target.value) || 0 })}
                       required
+                      className="text-sm sm:text-base"
                     />
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="category">Categoría</Label>
+                    <Label htmlFor="category" className="text-xs sm:text-sm">Categoría</Label>
                     <select
                       id="category"
                       value={formData.category}
                       onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                      className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+                      className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-xs sm:text-sm"
                     >
                       {CATEGORIES.map(cat => (
                         <option key={cat.value} value={cat.value}>
@@ -191,32 +211,34 @@ export function ExpensesPage() {
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="date">Fecha *</Label>
+                    <Label htmlFor="date" className="text-xs sm:text-sm">Fecha *</Label>
                     <Input
                       id="date"
                       type="date"
                       value={formData.date}
                       onChange={(e) => setFormData({ ...formData, date: e.target.value })}
                       required
+                      className="text-sm sm:text-base"
                     />
                   </div>
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="note">Nota (opcional)</Label>
+                  <Label htmlFor="note" className="text-xs sm:text-sm">Nota (opcional)</Label>
                   <Input
                     id="note"
                     placeholder="Agrega detalles adicionales..."
                     value={formData.note}
                     onChange={(e) => setFormData({ ...formData, note: e.target.value })}
+                    className="text-sm sm:text-base"
                   />
                 </div>
 
-                <div className="flex gap-3">
+                <div className="flex flex-col sm:flex-row gap-3">
                   <Button
                     type="submit"
                     disabled={submitting}
-                    className="bg-gradient-to-r from-blue-600 to-indigo-600"
+                    className="bg-gradient-to-r from-blue-600 to-indigo-600 w-full sm:w-auto text-xs sm:text-sm"
                   >
                     {submitting ? 'Guardando...' : 'Guardar gasto'}
                   </Button>
@@ -227,6 +249,7 @@ export function ExpensesPage() {
                       setShowForm(false)
                       setSearchParams({})
                     }}
+                    className="w-full sm:w-auto text-xs sm:text-sm"
                   >
                     Cancelar
                   </Button>
@@ -237,37 +260,55 @@ export function ExpensesPage() {
         )}
 
         {/* Filters and Stats */}
-        <div className="mb-6 grid grid-cols-1 gap-4 md:grid-cols-3">
-          <Card className="border-0 shadow-lg md:col-span-2">
-            <CardContent className="flex gap-4 p-4">
+        <div className="mb-6 grid grid-cols-1 gap-4 lg:grid-cols-3">
+          <Card className="border-0 shadow-lg lg:col-span-2">
+            <CardContent className="flex flex-col sm:flex-row gap-3 sm:gap-4 p-4">
               <div className="relative flex-1">
-                <Search className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-gray-400" />
+                <Search className="absolute left-3 top-1/2 h-4 w-4 sm:h-5 sm:w-5 -translate-y-1/2 text-gray-400" />
                 <Input
                   placeholder="Buscar gastos..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-10"
+                  className="pl-9 sm:pl-10 text-xs sm:text-sm"
                 />
               </div>
-              <div className="relative w-48">
-                <Calendar className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-gray-400" />
-                <Input
-                  type="month"
-                  value={selectedMonth}
-                  onChange={(e) => setSelectedMonth(e.target.value)}
-                  className="pl-10"
-                />
+              <div className="flex gap-2">
+                <select
+                  value={selectedMonthNum}
+                  onChange={(e) => setSelectedMonthNum(e.target.value)}
+                  className="flex h-10 rounded-md border border-input bg-background px-2 sm:px-3 py-2 text-xs sm:text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring flex-1 sm:flex-initial"
+                >
+                  {MONTHS.map(month => (
+                    <option key={month.value} value={month.value}>
+                      {month.label}
+                    </option>
+                  ))}
+                </select>
+                <select
+                  value={selectedYear}
+                  onChange={(e) => setSelectedYear(Number(e.target.value))}
+                  className="flex h-10 rounded-md border border-input bg-background px-2 sm:px-3 py-2 text-xs sm:text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                >
+                  {Array.from({ length: 10 }, (_, i) => {
+                    const year = new Date().getFullYear() - 5 + i
+                    return (
+                      <option key={year} value={year}>
+                        {year}
+                      </option>
+                    )
+                  })}
+                </select>
               </div>
             </CardContent>
           </Card>
 
           <Card className="border-0 bg-gradient-to-br from-blue-600 to-indigo-600 text-white shadow-lg">
-            <CardContent className="p-6">
-              <p className="text-sm font-medium opacity-90">Total gastado</p>
-              <p className="mt-2 text-3xl font-bold">
+            <CardContent className="p-4 sm:p-6">
+              <p className="text-xs sm:text-sm font-medium opacity-90">Total gastado</p>
+              <p className="mt-2 text-2xl sm:text-3xl font-bold truncate">
                 {user?.currency} {totalSpent.toFixed(2)}
               </p>
-              <p className="mt-1 text-xs opacity-75">
+              <p className="mt-1 text-[10px] sm:text-xs opacity-75">
                 {filteredExpenses.length} {filteredExpenses.length === 1 ? 'gasto' : 'gastos'}
               </p>
             </CardContent>
@@ -277,9 +318,13 @@ export function ExpensesPage() {
         {/* Expenses List */}
         <Card className="border-0 shadow-lg">
           <CardHeader>
-            <CardTitle>Lista de gastos</CardTitle>
-            <CardDescription>
-              {selectedMonth && `Gastos de ${new Date(selectedMonth + '-01').toLocaleDateString('es-ES', { month: 'long', year: 'numeric' })}`}
+            <CardTitle className="text-lg sm:text-xl">Lista de gastos</CardTitle>
+            <CardDescription className="text-xs sm:text-sm">
+              {selectedMonth && (() => {
+                const [year, month] = selectedMonth.split('-')
+                const date = new Date(parseInt(year), parseInt(month) - 1, 1)
+                return `Gastos de ${date.toLocaleDateString('es-ES', { month: 'long', year: 'numeric' })}`
+              })()}
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -288,43 +333,43 @@ export function ExpensesPage() {
                 <div className="h-8 w-8 animate-spin rounded-full border-4 border-blue-600 border-t-transparent" />
               </div>
             ) : filteredExpenses.length > 0 ? (
-              <div className="space-y-2">
+              <div className="space-y-2 sm:space-y-3">
                 {filteredExpenses.map((expense) => {
                   const categoryInfo = getCategoryInfo(expense.category)
                   return (
                     <div
                       key={expense.id}
-                      className="flex items-center justify-between rounded-lg border bg-white p-4 transition-shadow hover:shadow-md"
+                      className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4 rounded-lg border bg-white p-3 sm:p-4 transition-shadow hover:shadow-md"
                     >
-                      <div className="flex items-center gap-4">
-                        <div className={`rounded-lg px-3 py-1.5 text-sm font-medium ${categoryInfo.color}`}>
+                      <div className="flex items-start sm:items-center gap-3 sm:gap-4 min-w-0 flex-1">
+                        <div className={`rounded-lg px-2 py-1 sm:px-3 sm:py-1.5 text-[10px] sm:text-sm font-medium ${categoryInfo.color} whitespace-nowrap`}>
                           {categoryInfo.label}
                         </div>
-                        <div>
-                          <p className="font-semibold text-gray-900">{expense.title}</p>
-                          <p className="text-sm text-gray-500">
+                        <div className="min-w-0 flex-1">
+                          <p className="font-semibold text-gray-900 text-sm sm:text-base truncate">{expense.title}</p>
+                          <p className="text-xs sm:text-sm text-gray-500">
                             {new Date(expense.date).toLocaleDateString('es-ES', {
                               day: 'numeric',
-                              month: 'long',
+                              month: 'short',
                               year: 'numeric'
                             })}
                           </p>
                           {expense.note && (
-                            <p className="mt-1 text-xs text-gray-400">{expense.note}</p>
+                            <p className="mt-1 text-[10px] sm:text-xs text-gray-400 line-clamp-1">{expense.note}</p>
                           )}
                         </div>
                       </div>
-                      <div className="flex items-center gap-4">
-                        <p className="text-xl font-bold text-gray-900">
+                      <div className="flex items-center justify-between sm:justify-end gap-3 sm:gap-4">
+                        <p className="text-lg sm:text-xl font-bold text-gray-900 whitespace-nowrap">
                           -{expense.currency} {Number(expense.amount).toFixed(2)}
                         </p>
                         <Button
                           variant="ghost"
                           size="sm"
                           onClick={() => handleDelete(expense.id)}
-                          className="text-red-600 hover:bg-red-50 hover:text-red-700"
+                          className="text-red-600 hover:bg-red-50 hover:text-red-700 h-8 w-8 sm:h-9 sm:w-9 p-0"
                         >
-                          <Trash2 className="h-4 w-4" />
+                          <Trash2 className="h-3 w-3 sm:h-4 sm:w-4" />
                         </Button>
                       </div>
                     </div>
@@ -332,14 +377,14 @@ export function ExpensesPage() {
                 })}
               </div>
             ) : (
-              <div className="py-12 text-center">
-                <Filter className="mx-auto h-12 w-12 text-gray-300" />
-                <p className="mt-4 text-gray-500">
+              <div className="py-8 sm:py-12 text-center">
+                <Filter className="mx-auto h-10 w-10 sm:h-12 sm:w-12 text-gray-300" />
+                <p className="mt-4 text-sm sm:text-base text-gray-500">
                   {searchQuery ? 'No se encontraron gastos con ese criterio' : 'No hay gastos registrados este mes'}
                 </p>
                 <Button
                   onClick={() => setShowForm(true)}
-                  className="mt-4"
+                  className="mt-4 text-xs sm:text-sm"
                 >
                   Agregar primer gasto
                 </Button>
