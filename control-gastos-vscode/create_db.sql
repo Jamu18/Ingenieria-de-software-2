@@ -1,1 +1,0 @@
-CREATE DATABASE control_gastos_db;

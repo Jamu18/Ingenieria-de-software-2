@@ -1,10 +1,13 @@
 const dotenv = require('dotenv');
 const logger = require('./config/logger');
+const path = require('path');
 
 // Load env
-dotenv.config({ path: __dirname + '/.env' });
+dotenv.config({ path: path.join(__dirname, '../.env') });
 
 const { sequelize } = require('./db');
+// Import models to establish relationships before sync
+require('./models');
 const app = require('./app');
 
 const PORT = process.env.PORT || 3002;

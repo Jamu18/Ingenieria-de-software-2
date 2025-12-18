@@ -1,123 +1,13 @@
 <!doctype html>
-<html>
-
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Control de Gastos - Demo</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Lobster&display=swap" rel="stylesheet">
-  <link rel="preload" href="styles.css" as="style">
-  <link rel="stylesheet" href="styles.css">
-</head>
-
-<body>
-  <div class="container">
-    <h1 class="titulo"> Control de Gastos <span>Demo</span></h1>
-    <div id="auth-area">
-      <h2>Login</h2>
-      <input id="email" placeholder="Correo" />
-      <input id="password" type="password" placeholder="Contraseña" />
-      <button id="btn-login">Iniciar sesión</button>
-      <p>¿No tienes cuenta? <a href="#" id="link-register">Regístrate</a></p>
-    </div>
-
-    <div id="register-area" style="display:none;">
-      <h2>Registro</h2>
-      <input id="r-name" placeholder="Nombre" />
-      <input id="r-email" placeholder="Correo" />
-      <input id="r-password" type="password" placeholder="Contraseña" />
-      <select id="r-currency">
-        <option value="USD">USD</option>
-        <option value="EUR">EUR</option>
-        <option value="PEN">PEN</option>
-      </select>
-      <button id="btn-register">Registrar</button>
-      <p><a href="#" id="link-back-login">Volver a login</a></p>
-    </div>
-
-    <div id="dashboard" style="display:none;">
-      <h2>Bienvenido <span id="user-name"></span></h2>
-      <div id="salary-area" class="card-section">
-        <h3>Configuración de Sueldo</h3>
-        <div class="salary-input-area">
-          <label>Sueldo mensual:</label>
-          <input id="salary-input" type="number" step="0.01" />
-        </div>
-        
-        <div class="percentage-distribution">
-          <h4>Distribución de Sueldo</h4>
-          <div class="percentage-input">
-            <label>Necesidades básicas (%):</label>
-            <input id="basic-needs-percent" type="number" value="50" min="0" max="100" />
-          </div>
-          <div class="percentage-input">
-            <label>Gastos personales (%):</label>
-            <input id="personal-percent" type="number" value="30" min="0" max="100" />
-          </div>
-          <div class="percentage-input">
-            <label>Ahorro (%):</label>
-            <input id="savings-percent" type="number" value="20" min="0" max="100" />
-          </div>
-        </div>
-        <button id="btn-save-salary" class="btn-primary">Guardar configuración</button>
-      </div>
-
-      <div class="distribution-summary card-section">
-        <h3>Tu Dinero Este Mes</h3>
-        <div class="money-distribution">
-          <div class="money-box basic-needs">
-            <h4>Necesidades Básicas</h4>
-            <div class="amount" id="basic-needs-amount">$0</div>
-            <div class="percent">50%</div>
-          </div>
-          <div class="money-box personal-expenses">
-            <h4>Gastos Personales</h4>
-            <div class="amount" id="personal-amount">$0</div>
-            <div class="percent">30%</div>
-          </div>
-          <div class="money-box savings">
-            <h4>Ahorro</h4>
-            <div class="amount" id="savings-amount">$0</div>
-            <div class="percent" id="savings-percent">20%</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="navigation-buttons">
-        <a href="expenses.html" class="nav-button">
-          <span class="icon">📝</span>
-          Registrar Gastos
-        </a>
-        <a href="savings-goals.html" class="nav-button">
-          <span class="icon">🎯</span>
-          Metas de Ahorro
-        </a>
-      </div>
-
-      <div id="history-area" style="display:none;">
-        <h2>Registro y Saldos Anteriores</h2>
-        <button id="btn-new-entry">Crear nuevo registro</button>
-        <table id="history-table">
-          <thead>
-            <tr>
-              <th>Fecha</th>
-              <th>Título</th>
-              <th>Monto</th>
-              <th>Acciones</th>
-            </tr>
-          </thead>
-          <tbody>
-            <!-- Aquí se llenarán los registros dinámicamente -->
-          </tbody>
-        </table>
-        <p><a href="#" id="link-back-dashboard">Volver al Dashboard</a></p>
-      </div>
-
-    </div>
-  </div>
-  <script src="main.js"></script>
-</body>
-
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>frontend</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
 </html>

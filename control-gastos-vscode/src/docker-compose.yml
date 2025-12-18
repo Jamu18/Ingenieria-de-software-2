@@ -1,0 +1,51 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database
+  db:
+    image: postgres:15-alpine
+    container_name: control_gastos_base_datos
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: control_gastos_db
+      POSTGRES_USER: cg_user
+      POSTGRES_PASSWORD: jaime789521
+      PGDATA: /var/lib/postgresql/data
+    ports:
+      # Exponer Postgres en el puerto 5433 del host para evitar conflicto con otra instancia local
+      - "5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      # Si tienes un schema.sql, descomenta la siguiente línea para inicializar la DB
+      # - ./schema.sql:/docker-entrypoint-initdb.d/schema.sql
+    networks:
+      - control-gastos-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U cg_user -d control_gastos_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Adminer - Database Management Tool
+  adminer:
+    image: adminer
+    container_name: control_gastos_adminer
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    networks:
+      - control-gastos-network
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      ADMINER_DEFAULT_SERVER: db
+      ADMINER_DESIGN: dracula
+
+volumes:
+  postgres_data:
+    driver: local
+
+networks:
+  control-gastos-network:
+    driver: bridge

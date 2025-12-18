@@ -1,7 +1,6 @@
 
 const { DataTypes } = require('sequelize');
 const { sequelize } = require('../db');
-const User = require('./user.model');
 
 const Expense = sequelize.define('Expense', {
   id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
@@ -14,6 +13,6 @@ const Expense = sequelize.define('Expense', {
   note: { type: DataTypes.TEXT }
 }, { tableName: 'expenses' });
 
-Expense.belongsTo(User, { foreignKey: 'user_id' });
+// Relationships are defined in models/index.js
 
 module.exports = Expense;
